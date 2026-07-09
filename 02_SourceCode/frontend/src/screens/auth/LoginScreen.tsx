@@ -1,0 +1,356 @@
+/**
+ * LoginScreen - email/password login with gradient background.
+ * Purple gradient header area with white form card below.
+ * Includes Google (Android) and Apple (iOS) OAuth login options.
+ */
+
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  StatusBar,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from '@theme/theme';
+import { Button, Input, useToast } from '@components/ui';
+import { useAuth } from '@context/AuthContext';
+import type { LoginScreenProps } from '@navigation/types';
+
+export function LoginScreen({ navigation }: LoginScreenProps) {
+  const { signIn, signInWithGoogle, signInWithApple, loading } = useAuth();
+  const toast = useToast();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{
+    email?: string | null;
+    password?: string | null;
+  }>({});
+
+  const validate = () => {
+    const e: typeof errors = {};
+    if (!email.trim()) e.email = 'Email is required.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      e.email = 'Enter a valid email.';
+    if (!password) e.password = 'Password is required.';
+    else if (password.length < 6)
+      e.password = 'Password must be at least 6 characters.';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleLogin = async () => {
+    Keyboard.dismiss();
+    if (!validate()) return;
+    const { error } = await signIn(email, password);
+    if (error) {
+      toast.show(error, 'error');
+    } else {
+      toast.show('Welcome back!', 'success');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await signInWithGoogle();
+    if (error) {
+      toast.show(error, 'error');
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    const { error } = await signInWithApple();
+    if (error) {
+      toast.show(error, 'error');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <StatusBar
+        barStyle='light-content'
+        backgroundColor='transparent'
+        translucent
+      />
+
+      <LinearGradient
+        colors={[theme.colors.gradient.start, theme.colors.gradient.end]}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        {/* Header with back button */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
+            <Ionicons
+              name='chevron-back'
+              size={26}
+              color={theme.colors.textInverse}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Title section */}
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>
+            Log in to continue styling your wardrobe.
+          </Text>
+        </View>
+
+        {/* Form card */}
+        <View style={styles.formCard}>
+          <View style={styles.form}>
+            <Input
+              label='Email'
+              placeholder='you@example.com'
+              value={email}
+              onChangeText={(t) => {
+                setEmail(t);
+                if (errors.email) setErrors((p) => ({ ...p, email: null }));
+              }}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
+              error={errors.email}
+            />
+
+            <Input
+              label='Password'
+              placeholder='Enter your password'
+              value={password}
+              onChangeText={(t) => {
+                setPassword(t);
+                if (errors.password)
+                  setErrors((p) => ({ ...p, password: null }));
+              }}
+              secureTextEntry={!showPassword}
+              error={errors.password}
+              rightIcon={
+                <TouchableOpacity
+                  onPress={() => setShowPassword((s) => !s)}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off' : 'eye'}
+                    size={22}
+                    color={theme.colors.textMuted}
+                  />
+                </TouchableOpacity>
+              }
+            />
+          </View>
+
+          <View style={styles.actions}>
+            <Button
+              title='Log In'
+              onPress={handleLogin}
+              loading={loading}
+              fullWidth
+            />
+
+            {/* OAuth divider */}
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or continue with</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            {/* OAuth buttons */}
+            <View style={styles.oauthRow}>
+              {Platform.OS === 'android' && (
+                <TouchableOpacity
+                  style={styles.oauthBtn}
+                  onPress={handleGoogleLogin}
+                  activeOpacity={0.8}
+                >
+                  <GoogleIcon />
+                  <Text style={styles.oauthText}>Google</Text>
+                </TouchableOpacity>
+              )}
+              {Platform.OS === 'ios' && (
+                <TouchableOpacity
+                  style={styles.oauthBtn}
+                  onPress={handleAppleLogin}
+                  activeOpacity={0.8}
+                >
+                  <AppleIcon />
+                  <Text style={styles.oauthText}>Apple</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <TouchableOpacity
+              style={styles.signupBtn}
+              onPress={() => navigation.navigate('Signup')}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.signupText}>
+                Don't have an account?{' '}
+                <Text style={styles.signupLink}>Sign Up</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </LinearGradient>
+    </SafeAreaView>
+  );
+}
+
+/** Google "G" logo drawn with vector-friendly shapes. */
+function GoogleIcon() {
+  return (
+    <View style={styles.googleIcon}>
+      <Text style={styles.googleG}>G</Text>
+    </View>
+  );
+}
+
+/** Apple logo icon. */
+function AppleIcon() {
+  return (
+    <View style={styles.appleIcon}>
+      <Ionicons name='logo-apple' size={22} color={theme.colors.text} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.gradient.start,
+  },
+  gradient: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: theme.spacing.md,
+    paddingBottom: theme.spacing.sm,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleSection: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingTop: theme.spacing.xl,
+    paddingBottom: theme.spacing.xxxl,
+  },
+  title: {
+    fontSize: theme.typography.sizes.xxxl,
+    fontWeight: theme.typography.weights.bold,
+    color: theme.colors.textInverse,
+  },
+  subtitle: {
+    fontSize: theme.typography.sizes.md,
+    color: 'rgba(255, 255, 255, 0.85)',
+    marginTop: theme.spacing.xs,
+  },
+  formCard: {
+    flex: 1,
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.radius.xxxl,
+    borderTopRightRadius: theme.radius.xxxl,
+    paddingHorizontal: theme.spacing.xl,
+    paddingTop: theme.spacing.xxxl,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: { elevation: 4 },
+    }),
+  },
+  form: {
+    marginBottom: theme.spacing.md,
+  },
+  actions: {
+    marginTop: theme.spacing.sm,
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.divider,
+  },
+  dividerText: {
+    fontSize: theme.typography.sizes.sm,
+    color: theme.colors.textMuted,
+    marginHorizontal: theme.spacing.md,
+  },
+  oauthRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  oauthBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xxl,
+    borderRadius: theme.radius.input,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    minWidth: 160,
+  },
+  oauthText: {
+    fontSize: theme.typography.sizes.md,
+    fontWeight: theme.typography.weights.semibold,
+    color: theme.colors.text,
+    marginLeft: theme.spacing.sm,
+  },
+  googleIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  googleG: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#4285F4',
+  },
+  appleIcon: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  signupBtn: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
+    marginTop: theme.spacing.sm,
+  },
+  signupText: {
+    fontSize: theme.typography.sizes.sm,
+    color: theme.colors.textSecondary,
+  },
+  signupLink: {
+    color: theme.colors.primary,
+    fontWeight: theme.typography.weights.bold,
+  },
+});

@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "WearWise",
+    "slug": "wearwise",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "scheme": "wearwise",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2D1B69"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wearwise.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "WearWise needs camera access to photograph your wardrobe items.",
+        "NSPhotoLibraryUsageDescription": "WearWise needs photo library access to upload wardrobe item photos."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#2D1B69"
+      },
+      "package": "com.wearwise.app",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/logo.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "WearWise needs access to your photos to upload wardrobe items.",
+          "cameraPermission": "WearWise needs access to your camera to photograph wardrobe items."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": ""
+      }
+    }
+  }
+}
