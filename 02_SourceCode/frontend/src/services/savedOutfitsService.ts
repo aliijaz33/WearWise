@@ -3,7 +3,7 @@
  */
 
 import { supabase } from './supabase';
-import type { SavedOutfit, SavedOutfitInput } from '@/types';
+import type { SavedOutfit, SavedOutfitInput, SavedOutfitUpdate } from '@/types';
 
 export const savedOutfitsService = {
   async list(userId: string): Promise<SavedOutfit[]> {
@@ -24,6 +24,25 @@ export const savedOutfitsService = {
     const { data, error } = await supabase
       .from('saved_outfits')
       .insert({ ...input, user_id: userId })
+      .select()
+      .single();
+
+    if (error || !data) return null;
+    return data as SavedOutfit;
+  },
+
+  /**
+   * Partially update a saved outfit (e.g. rename it or toggle the favorite
+   * flag). Returns the updated row, or null on failure.
+   */
+  async update(
+    id: string,
+    patch: SavedOutfitUpdate,
+  ): Promise<SavedOutfit | null> {
+    const { data, error } = await supabase
+      .from('saved_outfits')
+      .update(patch)
+      .eq('id', id)
       .select()
       .single();
 

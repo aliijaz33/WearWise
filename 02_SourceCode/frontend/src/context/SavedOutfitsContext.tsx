@@ -11,13 +11,15 @@ import React, {
 } from 'react';
 import { savedOutfitsService } from '@services/savedOutfitsService';
 import { useAuth } from './AuthContext';
-import type { SavedOutfit, SavedOutfitInput } from '@/types';
+import type { SavedOutfit, SavedOutfitInput, SavedOutfitUpdate } from '@/types';
 
 interface SavedOutfitsContextValue {
   outfits: SavedOutfit[];
   loading: boolean;
   refresh: () => Promise<void>;
   addOutfit: (input: SavedOutfitInput) => Promise<SavedOutfit | null>;
+  updateOutfit: (id: string, patch: SavedOutfitUpdate) => Promise<boolean>;
+  toggleFavorite: (id: string) => Promise<boolean>;
   deleteOutfit: (id: string) => Promise<boolean>;
 }
 
@@ -61,6 +63,44 @@ export function SavedOutfitsProvider({
     [user],
   );
 
+  const updateOutfit = useCallback(
+    async (id: string, patch: SavedOutfitUpdate): Promise<boolean> => {
+      const updated = await savedOutfitsService.update(id, patch);
+      if (updated) {
+        setOutfits((prev) =>
+          prev.map((o) => (o.id === id ? { ...o, ...updated } : o)),
+        );
+      }
+      return !!updated;
+    },
+    [],
+  );
+
+  const toggleFavorite = useCallback(
+    async (id: string): Promise<boolean> => {
+      // Optimistic update: flip the heart immediately for a snappy UI, then
+      // sync to the backend. Roll back on failure.
+      const current = outfits.find((o) => o.id === id);
+      if (!current) return false;
+      const nextVal = !current.is_favorite;
+      setOutfits((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, is_favorite: nextVal } : o)),
+      );
+      const updated = await savedOutfitsService.update(id, {
+        is_favorite: nextVal,
+      });
+      if (!updated) {
+        // Roll back.
+        setOutfits((prev) =>
+          prev.map((o) => (o.id === id ? { ...o, ...current } : o)),
+        );
+        return false;
+      }
+      return true;
+    },
+    [outfits],
+  );
+
   const deleteOutfit = useCallback(async (id: string): Promise<boolean> => {
     const ok = await savedOutfitsService.remove(id);
     if (ok) {
@@ -71,7 +111,15 @@ export function SavedOutfitsProvider({
 
   return (
     <SavedOutfitsContext.Provider
-      value={{ outfits, loading, refresh, addOutfit, deleteOutfit }}
+      value={{
+        outfits,
+        loading,
+        refresh,
+        addOutfit,
+        updateOutfit,
+        toggleFavorite,
+        deleteOutfit,
+      }}
     >
       {children}
     </SavedOutfitsContext.Provider>

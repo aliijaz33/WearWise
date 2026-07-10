@@ -160,7 +160,17 @@ export const authService = {
 
   async updateProfile(
     userId: string,
-    updates: Partial<Pick<Profile, 'full_name' | 'avatar_url' | 'preferences'>>,
+    updates: Partial<
+      Pick<
+        Profile,
+        | 'full_name'
+        | 'avatar_url'
+        | 'profile_picture_url'
+        | 'measurements'
+        | 'notification_enabled'
+        | 'preferences'
+      >
+    >,
   ): Promise<Profile | null> {
     // First try a plain UPDATE. If the profile row doesn't exist yet
     // (trigger didn't fire), this returns 0 rows and we fall back to an

@@ -30,8 +30,8 @@ export type SignupScreenProps = NativeStackScreenProps<
 export type MainTabParamList = {
   Home: undefined;
   Wardrobe: undefined;
-  Creator: undefined;
-  Saved: undefined;
+  Outfits: undefined;
+  Favorites: undefined;
   Profile: undefined;
 };
 
@@ -40,8 +40,11 @@ export type WardrobeTabProps = BottomTabScreenProps<
   MainTabParamList,
   'Wardrobe'
 >;
-export type CreatorTabProps = BottomTabScreenProps<MainTabParamList, 'Creator'>;
-export type SavedTabProps = BottomTabScreenProps<MainTabParamList, 'Saved'>;
+export type OutfitsTabProps = BottomTabScreenProps<MainTabParamList, 'Outfits'>;
+export type FavoritesTabProps = BottomTabScreenProps<
+  MainTabParamList,
+  'Favorites'
+>;
 export type ProfileTabProps = BottomTabScreenProps<MainTabParamList, 'Profile'>;
 
 // ---- Root Stack (wraps tabs + modal screens) -----------------------------
@@ -51,6 +54,11 @@ export type RootStackParamList = {
   AddItem: { itemId?: string } | undefined;
   OutfitResult: { generated: GeneratedOutfit } | undefined;
   ItemDetail: { itemId: string };
+  Creator: undefined;
+  MyMeasurements: undefined;
+  MyPreferences: undefined;
+  ReminderSettings: undefined;
+  HelpSupport: undefined;
 };
 
 export type AddItemScreenProps = NativeStackScreenProps<
@@ -64,4 +72,24 @@ export type OutfitResultScreenProps = NativeStackScreenProps<
 export type ItemDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemDetail'
+>;
+export type CreatorScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Creator'
+>;
+export type MyMeasurementsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'MyMeasurements'
+>;
+export type MyPreferencesScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'MyPreferences'
+>;
+export type ReminderSettingsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'ReminderSettings'
+>;
+export type HelpSupportScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'HelpSupport'
 >;

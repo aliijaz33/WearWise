@@ -98,44 +98,37 @@ export function HomeScreen({ navigation }: Props) {
     return slots;
   }, [previewOutfit]);
 
-  // Functional search: filter recent items by query.
+  // Functional search: when there's no query, show the 8 most recently added
+  // items. When the user types a query, search across the ENTIRE wardrobe
+  // (not just the recent 8) so e.g. searching "shirt" surfaces every shirt,
+  // "watch" surfaces every watch, etc.
   const recentItems = useMemo(() => {
     const sorted = [...items].sort(
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
-    const list = sorted.slice(0, 8);
-    if (!search.trim()) return list;
+    if (!search.trim()) return sorted.slice(0, 8);
     const q = search.trim().toLowerCase();
-    return list.filter(
+    return sorted.filter(
       (i) =>
         i.type.toLowerCase().includes(q) ||
         i.category.toLowerCase().includes(q) ||
         i.color.toLowerCase().includes(q) ||
+        (i.season ?? '').toLowerCase().includes(q) ||
+        (i.notes ?? '').toLowerCase().includes(q) ||
         i.occasions.some((o) => o.toLowerCase().includes(q)),
     );
   }, [items, search]);
 
   const handleQuickGenerate = useCallback(() => {
-    if (isEmpty) {
+    if (isEmpty || !previewOutfit) {
       showToast('Add some items to your wardrobe first', 'info');
       return;
     }
-    const occasion = profile?.preferences?.default_occasion ?? 'Casual';
-    const result = generateOutfit(items, {
-      occasion,
-      weather: null,
-      style_preferences: profile?.preferences?.style_preferences ?? [],
-    });
-    if (!result) {
-      showToast(
-        `Couldn't build an outfit for ${occasion}. Try adding more items tagged for that occasion.`,
-        'error',
-      );
-      return;
-    }
-    navigation.navigate('OutfitResult', { generated: result });
-  }, [items, profile, navigation, showToast, isEmpty]);
+    // Navigate with the SAME outfit already shown in the suggestion box.
+    // Regeneration only happens on the OutfitResultScreen when the user taps "Regenerate".
+    navigation.navigate('OutfitResult', { generated: previewOutfit });
+  }, [isEmpty, previewOutfit, navigation, showToast]);
 
   const goToItem = useCallback(
     (item: WardrobeItem) => {
@@ -148,16 +141,20 @@ export function HomeScreen({ navigation }: Props) {
     navigation.navigate('AddItem');
   }, [navigation]);
 
+  const goToOutfits = useCallback(() => {
+    navigation.getParent()?.navigate('Outfits' as any);
+  }, [navigation]);
+
   const goToCreator = useCallback(() => {
-    navigation.getParent()?.navigate('Creator' as any);
+    navigation.navigate('Creator');
   }, [navigation]);
 
   const goToWardrobe = useCallback(() => {
     navigation.getParent()?.navigate('Wardrobe' as any);
   }, [navigation]);
 
-  const goToSaved = useCallback(() => {
-    navigation.getParent()?.navigate('Saved' as any);
+  const goToFavorites = useCallback(() => {
+    navigation.getParent()?.navigate('Favorites' as any);
   }, [navigation]);
 
   const goToProfile = useCallback(() => {
@@ -210,7 +207,7 @@ export function HomeScreen({ navigation }: Props) {
         >
           <Ionicons name='notifications' size={24} color={theme.colors.text} />
           <View style={styles.bellBadge}>
-            <Text style={styles.bellBadgeText}>3</Text>
+            <Text style={styles.bellBadgeText}>0</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -361,11 +358,15 @@ export function HomeScreen({ navigation }: Props) {
             label='Outfit Ideas'
             onPress={goToCreator}
           />
-          <QuickAction icon='calendar' label='Occasions' onPress={goToSaved} />
+          <QuickAction
+            icon='calendar'
+            label='Occasions'
+            onPress={goToOutfits}
+          />
           <QuickAction
             icon='heart-outline'
             label='Favourite'
-            onPress={goToProfile}
+            onPress={goToFavorites}
           />
         </View>
       </View>
@@ -374,7 +375,9 @@ export function HomeScreen({ navigation }: Props) {
       {!isEmpty && (
         <View style={styles.recentContainer}>
           <View style={styles.recentHeader}>
-            <Text style={styles.sectionTitle}>Recently Added</Text>
+            <Text style={styles.sectionTitle}>
+              {search.trim() ? 'Search Results' : 'Recently Added'}
+            </Text>
             <TouchableOpacity onPress={goToWardrobe}>
               <Text style={styles.viewAll}>View all</Text>
             </TouchableOpacity>
@@ -456,6 +459,7 @@ export function HomeScreen({ navigation }: Props) {
             style={styles.tipsIcon}
           />
           <Text style={styles.tipsText}>
+            <Text style={styles.tipsLabel}>Tips: </Text>
             {isEmpty
               ? 'Add a few items across categories to unlock smart outfit suggestions.'
               : 'Add more accessories to get better outfit suggestions.'}
@@ -812,6 +816,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: theme.colors.primary,
     lineHeight: 18,
+  },
+  tipsLabel: {
+    fontWeight: theme.typography.weights.bold,
   },
   tipsBtn: {
     backgroundColor: theme.colors.primary,

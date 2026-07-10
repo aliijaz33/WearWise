@@ -20,16 +20,10 @@ export function Header({
   subtitle,
   onBack,
   right,
-  transparent,
+  transparent: _transparent,
 }: HeaderProps) {
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: theme.spacing.sm },
-        !transparent && styles.bordered,
-      ]}
-    >
+    <View style={[styles.container, { paddingTop: theme.spacing.sm }]}>
       <View style={styles.row}>
         {onBack ? (
           <TouchableOpacity
@@ -65,10 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.md,
-  },
-  bordered: {
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.divider,
   },
   row: {
     flexDirection: 'row',

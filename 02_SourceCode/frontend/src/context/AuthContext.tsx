@@ -36,7 +36,17 @@ interface AuthContextValue {
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateProfile: (
-    updates: Partial<Pick<Profile, 'full_name' | 'avatar_url' | 'preferences'>>,
+    updates: Partial<
+      Pick<
+        Profile,
+        | 'full_name'
+        | 'avatar_url'
+        | 'profile_picture_url'
+        | 'measurements'
+        | 'notification_enabled'
+        | 'preferences'
+      >
+    >,
   ) => Promise<boolean>;
 }
 
@@ -175,7 +185,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateProfile = useCallback(
     async (
       updates: Partial<
-        Pick<Profile, 'full_name' | 'avatar_url' | 'preferences'>
+        Pick<
+          Profile,
+          | 'full_name'
+          | 'avatar_url'
+          | 'profile_picture_url'
+          | 'measurements'
+          | 'notification_enabled'
+          | 'preferences'
+        >
       >,
     ): Promise<boolean> => {
       if (!user) return false;

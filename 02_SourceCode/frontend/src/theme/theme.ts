@@ -117,11 +117,14 @@ export const typography = {
     bold: '700' as const,
     extrabold: '800' as const,
   },
+  // React Native's `lineHeight` style expects an ABSOLUTE pixel value, not a
+  // CSS-style multiplier. These helpers accept a fontSize and return the
+  // correct absolute lineHeight so text never gets clipped to a few pixels.
   lineHeights: {
-    tight: 1.2,
-    normal: 1.4,
-    relaxed: 1.6,
-    loose: 2.0,
+    tight: (fontSize: number) => Math.round(fontSize * 1.2),
+    normal: (fontSize: number) => Math.round(fontSize * 1.4),
+    relaxed: (fontSize: number) => Math.round(fontSize * 1.6),
+    loose: (fontSize: number) => Math.round(fontSize * 2.0),
   },
   letterSpacing: {
     tight: -0.5,

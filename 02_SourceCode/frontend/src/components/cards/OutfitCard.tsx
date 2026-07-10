@@ -1,246 +1,290 @@
 /**
- * OutfitCard - displays a saved outfit with thumbnail images of its items.
- * Used in the Saved Outfits list and Home screen.
+ * OutfitCard - premium saved-outfit row card.
+ *
+ * Layout (per client spec):
+ *  - A clean white card with a generous border radius + soft drop shadow.
+ *  - Horizontal split:
+ *      LEFT  → a tall dedicated slot showing ONLY the primary 'Tops' item as a
+ *              large, vertically prominent image.
+ *      RIGHT → Top line: Outfit Name (bold navy) left + an absolute-positioned
+ *              Heart favorite icon + a vertical three-dots (ellipsis-v) right.
+ *              Second line: a formatted date string, small muted gray.
+ *              Bottom row: a horizontal row of the remaining small item
+ *              thumbnails in strict order: Bottoms, Shoes, Bags, Accessories
+ *              (the accessory slot is only rendered when an accessory exists).
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
+  StyleSheet,
   Image,
   TouchableOpacity,
-  StyleSheet,
   ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '@theme/theme';
+
 import { getCategory } from '@constants/index';
+import { theme } from '@theme/theme';
 import type { SavedOutfit, WardrobeItem } from '@/types';
 
 interface OutfitCardProps {
   outfit: SavedOutfit;
-  /** Resolved items keyed by id (from wardrobe context). */
-  itemsById?: Record<string, WardrobeItem>;
+  itemsById: Record<string, WardrobeItem>;
   onPress?: (outfit: SavedOutfit) => void;
-  onDelete?: (outfit: SavedOutfit) => void;
+  onToggleFavorite?: (outfit: SavedOutfit) => void;
+  onOpenMenu?: (outfit: SavedOutfit) => void;
   style?: ViewStyle;
 }
 
+/** Ordered category slots for the small thumbnail row (after the Tops image). */
+const SMALL_SLOTS: Array<{
+  category: WardrobeItem['category'];
+  label: string;
+}> = [
+  { category: 'bottoms', label: 'Bottoms' },
+  { category: 'shoes', label: 'Shoes' },
+  { category: 'bags', label: 'Bags' },
+  { category: 'accessories', label: 'Accessories' },
+];
+
 export function OutfitCard({
   outfit,
-  itemsById = {},
+  itemsById,
   onPress,
-  onDelete,
+  onToggleFavorite,
+  onOpenMenu,
   style,
 }: OutfitCardProps) {
-  const resolved = outfit.item_ids
-    .map((id) => itemsById[id])
-    .filter(Boolean) as WardrobeItem[];
+  // Resolve the referenced items.
+  const resolved = useMemo(
+    () =>
+      outfit.item_ids
+        .map((id) => itemsById[id])
+        .filter(Boolean) as WardrobeItem[],
+    [outfit.item_ids, itemsById],
+  );
 
-  const dateLabel = new Date(outfit.created_at).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-  });
+  // Primary 'Tops' item for the big left slot. Falls back to a dress if the
+  // outfit uses a dress instead of a separate top.
+  const topItem = useMemo(
+    () =>
+      resolved.find((i) => i.category === 'tops') ??
+      resolved.find((i) => i.category === 'dresses') ??
+      null,
+    [resolved],
+  );
+
+  // Remaining items grouped by category for the small thumbnail row.
+  const smallItems = useMemo(() => {
+    const map: Record<string, WardrobeItem | undefined> = {};
+    SMALL_SLOTS.forEach((slot) => {
+      map[slot.category] = resolved.find((i) => i.category === slot.category);
+    });
+    return map;
+  }, [resolved]);
+
+  const dateLabel = useMemo(() => {
+    try {
+      return new Date(outfit.created_at).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+    } catch {
+      return '';
+    }
+  }, [outfit.created_at]);
+
+  const displayName = outfit.name?.trim() || outfit.occasion;
 
   return (
     <TouchableOpacity
-      activeOpacity={0.85}
+      activeOpacity={0.9}
       onPress={() => onPress?.(outfit)}
       style={[styles.card, style]}
     >
-      <View style={styles.thumbRow}>
-        {resolved.slice(0, 4).map((item, idx) => {
-          const cat = getCategory(item.category);
-          return (
-            <View
-              key={item.id}
-              style={[
-                styles.thumb,
-                { marginLeft: idx === 0 ? 0 : -theme.spacing.md },
-                { zIndex: 10 - idx },
-              ]}
-            >
-              {item.image_url ? (
-                <Image
-                  source={{ uri: item.image_url }}
-                  style={styles.thumbImage}
-                />
-              ) : (
-                <View
-                  style={[
-                    styles.thumbPlaceholder,
-                    { backgroundColor: cat?.color + '22' },
-                  ]}
-                >
-                  <Ionicons
-                    name='shirt'
-                    size={16}
-                    color={cat?.color ?? theme.colors.primary}
-                  />
-                </View>
-              )}
-            </View>
-          );
-        })}
-        {resolved.length === 0 ? (
-          <View style={styles.thumbPlaceholder}>
-            <Ionicons name='shirt' size={16} color={theme.colors.textMuted} />
+      {/* LEFT: tall primary Tops image */}
+      <View style={styles.leftSlot}>
+        {topItem?.image_url ? (
+          <Image
+            source={{ uri: topItem.image_url }}
+            style={styles.leftImage}
+            resizeMode='cover'
+          />
+        ) : (
+          <View style={styles.leftPlaceholder}>
+            <Ionicons
+              name='shirt-outline'
+              size={32}
+              color={theme.colors.textMuted}
+            />
           </View>
-        ) : null}
-        {resolved.length > 4 ? (
-          <View
-            style={[
-              styles.thumb,
-              styles.moreThumb,
-              { marginLeft: -theme.spacing.md },
-            ]}
-          >
-            <Text style={styles.moreText}>+{resolved.length - 4}</Text>
-          </View>
-        ) : null}
+        )}
       </View>
 
-      <View style={styles.body}>
-        <View style={styles.headerRow}>
-          <Text style={styles.occasion} numberOfLines={1}>
-            {outfit.occasion}
+      {/* RIGHT: name + actions + date + small thumbnails */}
+      <View style={styles.rightCol}>
+        {/* Top line: name (left) + heart + three-dots (right, absolute) */}
+        <View style={styles.topLine}>
+          <Text style={styles.name} numberOfLines={1}>
+            {displayName}
           </Text>
-          {onDelete ? (
+          <View style={styles.actions}>
             <TouchableOpacity
-              onPress={() => onDelete(outfit)}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              style={styles.deleteBtn}
+              onPress={() => onToggleFavorite?.(outfit)}
+              hitSlop={{ top: 12, bottom: 12, left: 8, right: 4 }}
+              style={styles.iconBtn}
             >
               <Ionicons
-                name='trash-outline'
+                name={outfit.is_favorite ? 'heart' : 'heart-outline'}
+                size={20}
+                color={
+                  outfit.is_favorite
+                    ? theme.colors.primary
+                    : theme.colors.textMuted
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => onOpenMenu?.(outfit)}
+              hitSlop={{ top: 12, bottom: 12, left: 4, right: 8 }}
+              style={styles.iconBtn}
+            >
+              <Ionicons
+                name='ellipsis-vertical'
                 size={18}
                 color={theme.colors.textMuted}
               />
             </TouchableOpacity>
-          ) : null}
+          </View>
         </View>
 
-        {outfit.weather ? (
-          <View style={styles.tagRow}>
-            <View style={styles.tag}>
-              <Ionicons
-                name='cloud-outline'
-                size={11}
-                color={theme.colors.textSecondary}
-              />
-              <Text style={styles.tagText}>{outfit.weather}</Text>
-            </View>
-          </View>
-        ) : null}
-
-        {outfit.rationale ? (
-          <Text style={styles.rationale} numberOfLines={2}>
-            {outfit.rationale}
-          </Text>
-        ) : null}
-
+        {/* Second line: formatted date */}
         <Text style={styles.date}>{dateLabel}</Text>
+
+        {/* Bottom row: small thumbnails in strict order */}
+        <View style={styles.thumbRow}>
+          {SMALL_SLOTS.map((slot) => {
+            const item = smallItems[slot.category];
+            // Accessories slot only renders when an accessory exists.
+            if (slot.category === 'accessories' && !item) return null;
+            const cat = getCategory(slot.category);
+            return (
+              <View key={slot.category} style={styles.thumb}>
+                {item?.image_url ? (
+                  <Image
+                    source={{ uri: item.image_url }}
+                    style={styles.thumbImage}
+                    resizeMode='cover'
+                  />
+                ) : (
+                  <View
+                    style={[
+                      styles.thumbPlaceholder,
+                      {
+                        backgroundColor:
+                          (cat?.color ?? theme.colors.primary) + '18',
+                      },
+                    ]}
+                  >
+                    <Ionicons
+                      name='shirt-outline'
+                      size={12}
+                      color={cat?.color ?? theme.colors.primary}
+                    />
+                  </View>
+                )}
+              </View>
+            );
+          })}
+        </View>
       </View>
     </TouchableOpacity>
   );
 }
 
+// ---- Styles ----------------------------------------------------------------
+
+const LEFT_WIDTH = 96;
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.divider,
-    overflow: 'hidden',
-    ...theme.shadows.sm,
-  },
-  thumbRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.sm,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.xxl, // 16px generous radius
+    padding: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+    ...theme.shadows.md,
   },
-  thumb: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    borderWidth: 3,
-    borderColor: theme.colors.surface,
+  leftSlot: {
+    width: LEFT_WIDTH,
+    height: LEFT_WIDTH + 28, // tall, vertically prominent
+    borderRadius: theme.radius.xl,
     overflow: 'hidden',
-    backgroundColor: theme.colors.surfaceAlt,
+    backgroundColor: theme.colors.primarySoft,
   },
-  thumbImage: {
+  leftImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
-  thumbPlaceholder: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    borderWidth: 3,
-    borderColor: theme.colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.surfaceAlt,
-  },
-  moreThumb: {
-    backgroundColor: theme.colors.primarySoft,
+  leftPlaceholder: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  moreText: {
-    fontSize: theme.typography.sizes.xs,
-    fontWeight: theme.typography.weights.bold,
-    color: theme.colors.primaryDark,
+  rightCol: {
+    flex: 1,
+    marginLeft: theme.spacing.md,
+    paddingVertical: 2,
+    justifyContent: 'space-between',
   },
-  body: {
-    padding: theme.spacing.lg,
-    paddingTop: theme.spacing.sm,
-  },
-  headerRow: {
+  topLine: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
   },
-  occasion: {
+  name: {
     flex: 1,
     fontSize: theme.typography.sizes.lg,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.text,
-  },
-  deleteBtn: {
-    padding: theme.spacing.xs,
-  },
-  tagRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: theme.spacing.sm,
-  },
-  tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.colors.surfaceAlt,
-    paddingVertical: 3,
-    paddingHorizontal: theme.spacing.sm,
-    borderRadius: theme.radius.pill,
+    lineHeight: theme.typography.lineHeights.tight(theme.typography.sizes.lg),
     marginRight: theme.spacing.xs,
   },
-  tagText: {
-    fontSize: theme.typography.sizes.xs,
-    color: theme.colors.textSecondary,
-    marginLeft: 3,
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  rationale: {
-    fontSize: theme.typography.sizes.sm,
-    color: theme.colors.textSecondary,
-    lineHeight: 19,
-    marginBottom: theme.spacing.sm,
+  iconBtn: {
+    padding: theme.spacing.xs,
   },
   date: {
-    fontSize: theme.typography.sizes.xs,
-    color: theme.colors.textMuted,
+    fontSize: theme.typography.sizes.sm,
+    color: theme.colors.textSecondary,
+    marginTop: 2,
+    lineHeight: theme.typography.lineHeights.normal(theme.typography.sizes.sm),
+  },
+  thumbRow: {
+    flexDirection: 'row',
+    marginTop: theme.spacing.sm,
+    gap: theme.spacing.sm,
+  },
+  thumb: {
+    width: 40,
+    height: 40,
+    borderRadius: theme.radius.md,
+    overflow: 'hidden',
+    backgroundColor: theme.colors.primarySoft,
+  },
+  thumbImage: {
+    width: '100%',
+    height: '100%',
+  },
+  thumbPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

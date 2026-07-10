@@ -5,11 +5,22 @@
 
 import type { CategoryId } from '@constants/index';
 
+export interface Measurements {
+  height: string | null;
+  chest: string | null;
+  waist: string | null;
+  hips: string | null;
+  shoe_size: string | null;
+}
+
 export interface Profile {
   id: string;
   email: string;
   full_name: string | null;
   avatar_url: string | null;
+  profile_picture_url: string | null;
+  measurements: Measurements | null;
+  notification_enabled: boolean | null;
   preferences: {
     style_preferences: string[];
     default_occasion: string | null;
@@ -47,21 +58,33 @@ export interface WardrobeItemInput {
 export interface SavedOutfit {
   id: string;
   user_id: string;
+  /** Optional custom display name (defaults to the occasion label). */
+  name: string | null;
   occasion: string;
   weather: string | null;
   style_preferences: string[];
   rationale: string | null;
   /** Ordered item references: top, bottom, dress, shoes, bag, accessories */
   item_ids: string[];
+  /** Heart toggle — synced to the saved_outfits table. */
+  is_favorite: boolean;
   created_at: string;
 }
 
 export interface SavedOutfitInput {
+  /** Optional custom display name. Falls back to the occasion label. */
+  name?: string | null;
   occasion: string;
   weather: string | null;
   style_preferences: string[];
   rationale: string | null;
   item_ids: string[];
+}
+
+/** Partial update payload for a saved outfit (edit name / toggle favorite). */
+export interface SavedOutfitUpdate {
+  name?: string | null;
+  is_favorite?: boolean;
 }
 
 /** A generated (not yet saved) outfit returned by the recommendation engine. */

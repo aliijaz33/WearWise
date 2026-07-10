@@ -17,6 +17,9 @@ create table if not exists public.profiles (
   email text not null,
   full_name text,
   avatar_url text,
+  profile_picture_url text,
+  measurements jsonb default '{"height": null, "chest": null, "waist": null, "hips": null, "shoe_size": null}'::jsonb,
+  notification_enabled boolean default true,
   preferences jsonb default '{"style_preferences": [], "default_occasion": null}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
