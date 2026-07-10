@@ -133,7 +133,7 @@ export function ProfileScreen({ navigation }: Props) {
       {
         key: 'favorites',
         label: 'Favorites',
-        value: 0,
+        value: outfits.filter((o) => o.is_favorite).length,
         icon: 'heart-outline',
         iconColor: '#FF6B8A',
         valueColor: '#FF6B8A',
@@ -149,7 +149,7 @@ export function ProfileScreen({ navigation }: Props) {
         gradient: ['#FFFFFF', '#E8F2FF'] as const,
       },
     ],
-    [items.length, outfits.length, distinctOccasions],
+    [items.length, outfits, distinctOccasions],
   );
 
   // ---- Avatar upload -------------------------------------------------------
@@ -375,6 +375,9 @@ export function ProfileScreen({ navigation }: Props) {
           </TouchableOpacity>
         </View>
 
+        {/* Uploading indicator sits just below the header while a photo upload is in flight. */}
+        {uploading && <Loading label='Uploading…' />}
+
         {/* ---- Profile card ---- */}
         <LinearGradient
           colors={['#f1eff8', '#f0edf9']}
@@ -474,8 +477,6 @@ export function ProfileScreen({ navigation }: Props) {
 
         <Text style={styles.versionText}>WearWise v1.0.0</Text>
       </ScrollView>
-
-      {uploading && <Loading label='Uploading…' fullscreen />}
 
       {/* ---- Avatar ActionSheet ---- */}
       <Modal visible={sheetVisible} transparent animationType='slide'>

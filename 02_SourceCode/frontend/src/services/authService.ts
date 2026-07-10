@@ -97,45 +97,6 @@ export const authService = {
     };
   },
 
-  /**
-   * Sign in with Google OAuth. Opens the native browser / auth flow and
-   * returns to the app via a deep link.
-   */
-  async signInWithGoogle(): Promise<AuthResult> {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'wearwise://auth-callback',
-      },
-    });
-
-    if (error) {
-      return { user: null, error: mapAuthError(error.message) };
-    }
-
-    // OAuth redirects away from the app; the session is established via
-    // the onAuthStateChange listener once the user returns.
-    return { user: null, error: null };
-  },
-
-  /**
-   * Sign in with Apple OAuth (iOS). Opens the native Sign in with Apple flow.
-   */
-  async signInWithApple(): Promise<AuthResult> {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: {
-        redirectTo: 'wearwise://auth-callback',
-      },
-    });
-
-    if (error) {
-      return { user: null, error: mapAuthError(error.message) };
-    }
-
-    return { user: null, error: null };
-  },
-
   async signOut(): Promise<void> {
     await supabase.auth.signOut();
   },

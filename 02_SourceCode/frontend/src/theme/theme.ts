@@ -33,6 +33,7 @@ export const colors = {
   textMuted: '#B0ACBF',
   textInverse: '#FFFFFF',
   textLink: '#5D38F5',
+  label: 'rgb(0,0,0)',
 
   // Feedback
   success: '#34C759',

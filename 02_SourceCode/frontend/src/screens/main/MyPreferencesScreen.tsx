@@ -86,6 +86,9 @@ export function MyPreferencesScreen({ navigation }: Props) {
         <View style={styles.backBtn} />
       </View>
 
+      {/* Saving indicator sits just below the header while a save is in flight. */}
+      {saving && <Loading label='Saving…' />}
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -153,7 +156,6 @@ export function MyPreferencesScreen({ navigation }: Props) {
           />
         </View>
       </ScrollView>
-      {saving && <Loading label='Saving…' />}
     </SafeAreaView>
   );
 }

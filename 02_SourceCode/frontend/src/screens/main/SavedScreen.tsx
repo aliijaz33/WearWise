@@ -28,6 +28,7 @@ import {
   Modal,
   Pressable,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -177,6 +178,11 @@ export function SavedScreen({ navigation }: Props) {
     navigation.getParent()?.navigate('Outfits' as any);
   }, [navigation]);
 
+  // Back arrow jumps to the Home tab.
+  const goHome = useCallback(() => {
+    navigation.getParent()?.navigate('Home' as any);
+  }, [navigation]);
+
   const renderItem = useCallback(
     ({ item }: { item: SavedOutfit }) => (
       <OutfitCard
@@ -194,7 +200,7 @@ export function SavedScreen({ navigation }: Props) {
   if (loading && outfits.length === 0) {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <Header title='My Saved Outfits' searchDisabled />
+        <Header title='My Saved Outfits' searchDisabled onBack={goHome} />
         <Loading label='Loading your outfits…' fullscreen />
       </SafeAreaView>
     );
@@ -204,7 +210,7 @@ export function SavedScreen({ navigation }: Props) {
   if (outfits.length === 0) {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <Header title='My Saved Outfits' searchDisabled />
+        <Header title='My Saved Outfits' searchDisabled onBack={goHome} />
         <View style={styles.emptyWrap}>
           <EmptyState
             icon='bookmark-outline'
@@ -231,18 +237,25 @@ export function SavedScreen({ navigation }: Props) {
             return !v;
           });
         }}
+        onBack={goHome}
       />
 
-      {/* Occasion filter pills */}
-      <View style={styles.filterRow}>
-        {availablePills.map((p) => (
-          <FilterPill
-            key={p}
-            label={p === 'all' ? 'All' : p}
-            selected={filter === p}
-            onPress={() => setFilter(p)}
-          />
-        ))}
+      {/* Occasion filter pills (horizontally scrollable) */}
+      <View style={styles.filterSection}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterRow}
+        >
+          {availablePills.map((p) => (
+            <FilterPill
+              key={p}
+              label={p === 'all' ? 'All' : p}
+              selected={filter === p}
+              onPress={() => setFilter(p)}
+            />
+          ))}
+        </ScrollView>
       </View>
 
       <FlatList
@@ -320,6 +333,7 @@ interface HeaderProps {
   onSearchChange?: (t: string) => void;
   onToggleSearch?: () => void;
   searchDisabled?: boolean;
+  onBack?: () => void;
 }
 
 function Header({
@@ -329,17 +343,21 @@ function Header({
   onSearchChange,
   onToggleSearch,
   searchDisabled,
+  onBack,
 }: HeaderProps) {
   return (
     <View style={styles.header}>
       <TouchableOpacity
-        onPress={() => {
-          /* Tab root screen — no back; keep hitSlop for consistency. */
-        }}
+        onPress={onBack}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         style={styles.headerIconBtn}
+        disabled={!onBack}
       >
-        <Ionicons name='chevron-back' size={24} color={theme.colors.text} />
+        <Ionicons
+          name='chevron-back'
+          size={24}
+          color={onBack ? theme.colors.text : theme.colors.textMuted}
+        />
       </TouchableOpacity>
 
       {searchVisible && !searchDisabled ? (
@@ -468,23 +486,23 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     padding: 0,
   },
+  filterSection: {
+    paddingVertical: theme.spacing.sm,
+  },
   filterRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.sm,
   },
   pill: {
-    paddingVertical: theme.spacing.sm + 2,
-    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.xs + 2,
+    paddingHorizontal: theme.spacing.md,
     borderRadius: theme.radius.pill,
-    borderWidth: 1.5,
+    borderWidth: 1,
     marginRight: theme.spacing.sm,
-    marginBottom: theme.spacing.sm,
   },
   pillText: {
     fontSize: theme.typography.sizes.sm,
-    fontWeight: theme.typography.weights.semibold,
+    fontWeight: theme.typography.weights.medium,
   },
   listContent: {
     paddingHorizontal: theme.spacing.lg,

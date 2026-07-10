@@ -126,43 +126,48 @@ export function OutfitCard({
 
       {/* RIGHT: name + actions + date + small thumbnails */}
       <View style={styles.rightCol}>
-        {/* Top line: name (left) + heart + three-dots (right, absolute) */}
-        <View style={styles.topLine}>
-          <Text style={styles.name} numberOfLines={1}>
-            {displayName}
-          </Text>
-          <View style={styles.actions}>
-            <TouchableOpacity
-              onPress={() => onToggleFavorite?.(outfit)}
-              hitSlop={{ top: 12, bottom: 12, left: 8, right: 4 }}
-              style={styles.iconBtn}
-            >
-              <Ionicons
-                name={outfit.is_favorite ? 'heart' : 'heart-outline'}
-                size={20}
-                color={
-                  outfit.is_favorite
-                    ? theme.colors.primary
-                    : theme.colors.textMuted
-                }
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => onOpenMenu?.(outfit)}
-              hitSlop={{ top: 12, bottom: 12, left: 4, right: 8 }}
-              style={styles.iconBtn}
-            >
-              <Ionicons
-                name='ellipsis-vertical'
-                size={18}
-                color={theme.colors.textMuted}
-              />
-            </TouchableOpacity>
+        {/* Name + date grouped together so the date sits right under the name
+            (rightCol uses space-between to push this group to the top and the
+            thumbnail row to the bottom). */}
+        <View style={styles.nameDateWrap}>
+          {/* Top line: name (left) + heart + three-dots (right, absolute) */}
+          <View style={styles.topLine}>
+            <Text style={styles.name} numberOfLines={1}>
+              {displayName}
+            </Text>
+            <View style={styles.actions}>
+              <TouchableOpacity
+                onPress={() => onToggleFavorite?.(outfit)}
+                hitSlop={{ top: 12, bottom: 12, left: 8, right: 4 }}
+                style={styles.iconBtn}
+              >
+                <Ionicons
+                  name={outfit.is_favorite ? 'heart' : 'heart-outline'}
+                  size={20}
+                  color={
+                    outfit.is_favorite
+                      ? theme.colors.primary
+                      : theme.colors.textMuted
+                  }
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => onOpenMenu?.(outfit)}
+                hitSlop={{ top: 12, bottom: 12, left: 4, right: 8 }}
+                style={styles.iconBtn}
+              >
+                <Ionicons
+                  name='ellipsis-vertical'
+                  size={18}
+                  color={theme.colors.textMuted}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        {/* Second line: formatted date */}
-        <Text style={styles.date}>{dateLabel}</Text>
+          {/* Second line: formatted date */}
+          <Text style={styles.date}>{dateLabel}</Text>
+        </View>
 
         {/* Bottom row: small thumbnails in strict order */}
         <View style={styles.thumbRow}>
@@ -216,7 +221,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.xxl, // 16px generous radius
     padding: theme.spacing.sm,
     marginBottom: theme.spacing.md,
-    ...theme.shadows.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.border,
+    ...theme.shadows.sm,
   },
   leftSlot: {
     width: LEFT_WIDTH,
@@ -239,6 +246,11 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.md,
     paddingVertical: 2,
     justifyContent: 'space-between',
+  },
+  nameDateWrap: {
+    // Keeps the outfit name and the saved date tightly grouped together so
+    // the date sits directly under the name (rightCol uses space-between to
+    // push this group to the top and the thumbnail row to the bottom).
   },
   topLine: {
     flexDirection: 'row',
@@ -263,7 +275,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: theme.typography.sizes.sm,
     color: theme.colors.textSecondary,
-    marginTop: 2,
+    marginTop: 1,
     lineHeight: theme.typography.lineHeights.normal(theme.typography.sizes.sm),
   },
   thumbRow: {

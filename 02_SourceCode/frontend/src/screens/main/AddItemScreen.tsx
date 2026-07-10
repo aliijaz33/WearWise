@@ -267,27 +267,16 @@ export function AddItemScreen({ navigation, route }: Props) {
     showToast,
   ]);
 
-  if (saving) {
-    return (
-      <Screen scroll={false}>
-        <Header
-          title={isEditing ? 'Edit Item' : 'Add Item'}
-          onBack={() => navigation.goBack()}
-        />
-        <Loading
-          label={isEditing ? 'Updating item…' : 'Saving item…'}
-          fullscreen
-        />
-      </Screen>
-    );
-  }
-
   return (
     <Screen scroll={false}>
       <Header
         title={isEditing ? 'Edit Item' : 'Add Item'}
         onBack={() => navigation.goBack()}
       />
+      {/* Saving indicator sits just below the header while a save is in flight. */}
+      {saving && (
+        <Loading label={isEditing ? 'Updating item…' : 'Saving item…'} />
+      )}
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

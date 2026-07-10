@@ -1,7 +1,7 @@
 /**
  * LoginScreen - email/password login with gradient background.
  * Purple gradient header area with white form card below.
- * Includes Google (Android) and Apple (iOS) OAuth login options.
+ * Includes a "Forgot password?" link that sends a reset email.
  */
 
 import React, { useState } from 'react';
@@ -13,6 +13,7 @@ import {
   Keyboard,
   StatusBar,
   Platform,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -23,7 +24,7 @@ import { useAuth } from '@context/AuthContext';
 import type { LoginScreenProps } from '@navigation/types';
 
 export function LoginScreen({ navigation }: LoginScreenProps) {
-  const { signIn, signInWithGoogle, signInWithApple, loading } = useAuth();
+  const { signIn, resetPassword, loading } = useAuth();
   const toast = useToast();
 
   const [email, setEmail] = useState('');
@@ -57,18 +58,42 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    const { error } = await signInWithGoogle();
-    if (error) {
-      toast.show(error, 'error');
+  const handleForgotPassword = () => {
+    // Prompt for the email to send the reset link to.
+    if (!email.trim()) {
+      toast.show(
+        'Enter your email above first, then tap Forgot Password.',
+        'info',
+      );
+      return;
     }
-  };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      toast.show('Enter a valid email above first.', 'error');
+      return;
+    }
 
-  const handleAppleLogin = async () => {
-    const { error } = await signInWithApple();
-    if (error) {
-      toast.show(error, 'error');
-    }
+    Alert.alert(
+      'Reset Password',
+      `Send a password reset link to ${email.trim()}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Send Link',
+          onPress: async () => {
+            const { error } = await resetPassword(email.trim());
+            if (error) {
+              toast.show(error, 'error');
+            } else {
+              toast.show(
+                'Reset link sent! Check your email to reset your password.',
+                'success',
+              );
+            }
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   };
 
   return (
@@ -149,6 +174,15 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
                 </TouchableOpacity>
               }
             />
+
+            {/* Forgot password link */}
+            <TouchableOpacity
+              style={styles.forgotBtn}
+              onPress={handleForgotPassword}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.forgotText}>Forgot Password?</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.actions}>
@@ -158,37 +192,6 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
               loading={loading}
               fullWidth
             />
-
-            {/* OAuth divider */}
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or continue with</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* OAuth buttons */}
-            <View style={styles.oauthRow}>
-              {Platform.OS === 'android' && (
-                <TouchableOpacity
-                  style={styles.oauthBtn}
-                  onPress={handleGoogleLogin}
-                  activeOpacity={0.8}
-                >
-                  <GoogleIcon />
-                  <Text style={styles.oauthText}>Google</Text>
-                </TouchableOpacity>
-              )}
-              {Platform.OS === 'ios' && (
-                <TouchableOpacity
-                  style={styles.oauthBtn}
-                  onPress={handleAppleLogin}
-                  activeOpacity={0.8}
-                >
-                  <AppleIcon />
-                  <Text style={styles.oauthText}>Apple</Text>
-                </TouchableOpacity>
-              )}
-            </View>
 
             <TouchableOpacity
               style={styles.signupBtn}
@@ -204,24 +207,6 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         </View>
       </LinearGradient>
     </SafeAreaView>
-  );
-}
-
-/** Google "G" logo drawn with vector-friendly shapes. */
-function GoogleIcon() {
-  return (
-    <View style={styles.googleIcon}>
-      <Text style={styles.googleG}>G</Text>
-    </View>
-  );
-}
-
-/** Apple logo icon. */
-function AppleIcon() {
-  return (
-    <View style={styles.appleIcon}>
-      <Ionicons name='logo-apple' size={22} color={theme.colors.text} />
-    </View>
   );
 }
 
@@ -278,67 +263,18 @@ const styles = StyleSheet.create({
   form: {
     marginBottom: theme.spacing.md,
   },
+  forgotBtn: {
+    alignSelf: 'flex-end',
+    paddingVertical: theme.spacing.xs,
+    marginTop: theme.spacing.xs,
+  },
+  forgotText: {
+    fontSize: theme.typography.sizes.sm,
+    color: theme.colors.primary,
+    fontWeight: theme.typography.weights.semibold,
+  },
   actions: {
     marginTop: theme.spacing.sm,
-  },
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: theme.spacing.lg,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.divider,
-  },
-  dividerText: {
-    fontSize: theme.typography.sizes.sm,
-    color: theme.colors.textMuted,
-    marginHorizontal: theme.spacing.md,
-  },
-  oauthRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: theme.spacing.sm,
-  },
-  oauthBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.xxl,
-    borderRadius: theme.radius.input,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-    minWidth: 160,
-  },
-  oauthText: {
-    fontSize: theme.typography.sizes.md,
-    fontWeight: theme.typography.weights.semibold,
-    color: theme.colors.text,
-    marginLeft: theme.spacing.sm,
-  },
-  googleIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  googleG: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#4285F4',
-  },
-  appleIcon: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   signupBtn: {
     alignItems: 'center',

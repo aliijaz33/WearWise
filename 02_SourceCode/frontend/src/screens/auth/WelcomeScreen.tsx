@@ -1,8 +1,10 @@
 /**
  * WelcomeScreen - first screen on load.
- * Full-screen purple gradient with the WearWise logo, tagline,
- * a white "Get Started" button, and a "Login" link.
- * Design per guideforyou.js LoginScreenSpec.
+ *
+ * Full-screen background image with a circular hanger photo, the WearWise
+ * wordmark and tagline, and a solid white bottom panel that anchors a vibrant
+ * purple "Get Started" button and a "Login" link row.
+ * Design per guideforyou.js WelcomeScreenSpec.
  */
 
 import React from 'react';
@@ -11,13 +13,14 @@ import {
   Text,
   StyleSheet,
   Image,
+  ImageBackground,
   TouchableOpacity,
   StatusBar,
   Dimensions,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { theme } from '@theme/theme';
 import type { WelcomeScreenProps } from '@navigation/types';
 
@@ -25,58 +28,57 @@ const { width, height } = Dimensions.get('window');
 
 export function WelcomeScreen({ navigation }: WelcomeScreenProps) {
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar
-        barStyle='light-content'
+        //barStyle='light-content'
         backgroundColor='transparent'
         translucent
       />
 
-      <LinearGradient
-        colors={[theme.colors.gradient.start, theme.colors.gradient.end]}
-        style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      {/* Full-screen background image — shown directly, no gradient overlay. */}
+      <ImageBackground
+        source={require('../../../assets/images/background.jpeg')}
+        style={styles.background}
+        resizeMode='cover'
       >
-        <View style={styles.content}>
-          {/* Logo Section */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoCircle}>
-              <Image
-                source={require('../../../assets/images/logo.png')}
-                style={styles.logo}
-                resizeMode='contain'
-              />
-            </View>
-            <Text style={styles.logoText}>WearWise</Text>
-            <Text style={styles.tagline}>Smart Outfits for Every Occasion</Text>
+        {/* Branding section — hanger image + wordmark + tagline */}
+        <View style={styles.branding}>
+          <View style={styles.hangerWrap}>
+            <Image
+              source={require('../../../assets/icons/hanger.png')}
+              style={styles.hangerImage}
+              resizeMode='cover'
+            />
           </View>
 
-          {/* Bottom Buttons Section */}
-          <View style={styles.bottomContainer}>
-            {/* Get Started Button */}
-            <TouchableOpacity
-              style={styles.getStartedButton}
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate('Signup')}
-            >
-              <Text style={styles.getStartedText}>Get Started</Text>
-            </TouchableOpacity>
-
-            {/* Login Link */}
-            <TouchableOpacity
-              style={styles.loginButton}
-              activeOpacity={0.6}
-              onPress={() => navigation.navigate('Login')}
-            >
-              <Text style={styles.loginText}>
-                Already have an account?{' '}
-                <Text style={styles.loginHighlight}>Login</Text>
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.logoText}>WearWise</Text>
+          <Text style={styles.tagline}>Smart Outfits for Every Occasion</Text>
         </View>
-      </LinearGradient>
+
+        {/* White bottom controller card — anchors to the very bottom edge */}
+        <View style={styles.bottomCard}>
+          {/* Get Started — solid vibrant brand purple */}
+          <TouchableOpacity
+            style={styles.getStartedButton}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('Signup')}
+          >
+            <Text style={styles.getStartedText}>Get Started</Text>
+          </TouchableOpacity>
+
+          {/* Login row */}
+          <TouchableOpacity
+            style={styles.loginRow}
+            activeOpacity={0.6}
+            onPress={() => navigation.navigate('Login')}
+          >
+            <Text style={styles.loginText}>
+              Already have an account?{' '}
+              <Text style={styles.loginHighlight}>Login</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -84,46 +86,27 @@ export function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.gradient.start,
   },
-  gradient: {
+  background: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  content: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.xxxl,
-    paddingVertical: theme.spacing.huge,
-  },
-  // Logo Section
-  logoContainer: {
+  branding: {
     alignItems: 'center',
-    marginTop:
-      height > 667
-        ? theme.spacing.huge + theme.spacing.huge
-        : theme.spacing.huge,
+    marginTop: '10%',
+    paddingHorizontal: '20%',
   },
-  logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 30,
-    backgroundColor: '#FFFFFF',
+  // Circular frame around the hanger photo.
+  hangerWrap: {
+    width: 200,
+    height: 160,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.lg,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-      },
-      android: { elevation: 5 },
-    }),
   },
-  logo: {
-    width: 90,
-    height: 90,
+  hangerImage: {
+    width: '100%',
+    height: '100%',
   },
   logoText: {
     fontSize:
@@ -134,59 +117,83 @@ const styles = StyleSheet.create({
     color: theme.colors.textInverse,
     letterSpacing: theme.typography.letterSpacing.wider,
     marginBottom: theme.spacing.sm,
-    textShadowColor: 'rgba(0,0,0,0.1)',
-    textShadowOffset: { width: 0, height: 2 },
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
   },
   tagline: {
-    fontSize: theme.typography.sizes.lg,
-    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: theme.typography.sizes.xxl,
+    fontWeight: theme.typography.weights.medium,
+    color: '#FFFFFF',
     textAlign: 'center',
+    lineHeight: theme.typography.lineHeights.relaxed(theme.typography.sizes.lg),
     letterSpacing: 0.5,
+    paddingHorizontal: theme.spacing.xxxl,
+    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
-  // Bottom Section
-  bottomContainer: {
-    width: '100%',
-    gap: theme.spacing.lg,
-  },
-  // Get Started Button
-  getStartedButton: {
+  // White bottom panel — anchors to the bottom edge of the screen.
+  bottomCard: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: theme.spacing.xxxl,
+    paddingTop: theme.spacing.xxxl,
+    paddingBottom: theme.spacing.xxxl,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
+      },
+      android: { elevation: 12 },
+    }),
+  },
+  // Get Started — solid vibrant brand purple fill.
+  getStartedButton: {
+    backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.lg,
     borderRadius: theme.radius.button,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 56,
+    marginBottom: theme.spacing.lg,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: theme.colors.primary,
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.3,
         shadowRadius: 8,
       },
       android: { elevation: 5 },
     }),
   },
   getStartedText: {
-    color: theme.colors.primary,
+    color: '#FFFFFF',
     fontSize: theme.typography.sizes.xl,
-    fontWeight: theme.typography.weights.semibold,
+    fontWeight: theme.typography.weights.bold,
     letterSpacing: 0.3,
   },
-  // Login Link
-  loginButton: {
-    paddingVertical: theme.spacing.md,
+  // Login row — directly below the purple button.
+  loginRow: {
+    paddingVertical: theme.spacing.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
   loginText: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: theme.typography.sizes.lg,
+    color: theme.colors.textSecondary,
+    fontSize: theme.typography.sizes.md,
     fontWeight: theme.typography.weights.regular,
   },
   loginHighlight: {
-    color: '#FFFFFF',
-    fontWeight: theme.typography.weights.semibold,
-    textDecorationLine: 'underline',
+    color: theme.colors.primary,
+    fontWeight: theme.typography.weights.bold,
   },
 });

@@ -31,8 +31,7 @@ interface AuthContextValue {
     password: string,
     fullName: string,
   ) => Promise<{ error: string | null }>;
-  signInWithGoogle: () => Promise<{ error: string | null }>;
-  signInWithApple: () => Promise<{ error: string | null }>;
+  resetPassword: (email: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateProfile: (
@@ -156,16 +155,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  const signInWithGoogle = useCallback(async () => {
+  const resetPassword = useCallback(async (email: string) => {
     setLoading(true);
-    const { error } = await authService.signInWithGoogle();
-    setLoading(false);
-    return { error };
-  }, []);
-
-  const signInWithApple = useCallback(async () => {
-    setLoading(true);
-    const { error } = await authService.signInWithApple();
+    const { error } = await authService.resetPassword(email);
     setLoading(false);
     return { error };
   }, []);
@@ -235,8 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       signIn,
       signUp,
-      signInWithGoogle,
-      signInWithApple,
+      resetPassword,
       signOut,
       refreshProfile,
       updateProfile,
@@ -249,8 +240,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       signIn,
       signUp,
-      signInWithGoogle,
-      signInWithApple,
+      resetPassword,
       signOut,
       refreshProfile,
       updateProfile,

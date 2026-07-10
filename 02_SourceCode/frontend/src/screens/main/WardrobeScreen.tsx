@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
   categoryLabel: {
     marginTop: 6,
     fontSize: theme.typography.sizes.xs,
-    color: theme.colors.textSecondary,
+    color: theme.colors.label,
     fontWeight: theme.typography.weights.regular,
   },
   categoryLabelActive: {
@@ -399,6 +399,7 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontSize: theme.typography.sizes.sm,
     fontWeight: theme.typography.weights.medium,
+    color: theme.colors.label,
   },
   grid: {
     padding: theme.spacing.lg,

@@ -139,6 +139,9 @@ export function MyMeasurementsScreen({ navigation }: Props) {
         <View style={styles.backBtn} />
       </View>
 
+      {/* Saving indicator sits just below the header while a save is in flight. */}
+      {saving && <Loading label='Saving…' />}
+
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -196,7 +199,6 @@ export function MyMeasurementsScreen({ navigation }: Props) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      {saving && <Loading label='Saving…' />}
     </SafeAreaView>
   );
 }
