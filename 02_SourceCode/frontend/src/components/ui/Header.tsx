@@ -1,6 +1,4 @@
-/**
- * Header - screen title bar with optional back button and right action.
- */
+// Header - screen title bar with optional back button and right action.
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';

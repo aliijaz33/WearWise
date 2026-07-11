@@ -1,21 +1,4 @@
-/**
- * MainTabs - bottom tab navigation: Home, Wardrobe, Outfits, Favorites, Profile.
- *
- * Tab mapping (per client spec):
- *  - Home      → HomeScreen        (clean outline house — Feather 'home')
- *  - Wardrobe  → WardrobeScreen    (line-art clothes hanger — Feather 'loader' fallback not used; MaterialCommunityIcons 'hanger')
- *  - Outfits   → SavedScreen       (unfilled line-art t-shirt — MaterialCommunityIcons 'tshirt-crew-outline')
- *  - Favorites → FavoritesScreen   (standard line heart — Feather 'heart')
- *  - Profile   → ProfileScreen     (active = solid filled purple circle w/ white avatar; inactive = outline)
- *
- * Design notes (floating rounded tab bar):
- *  - The bar floats above the screen content with horizontal margins, large
- *    corner radius, and a soft purple shadow — matching the client design.
- *  - Active state is indicated ONLY by color (icon + label → brand purple).
- *    There is NO bottom dot indicator.
- *  - Each of the 5 tabs is distributed evenly (flex: 1) inside a
- *    space-around row, with content centered vertically.
- */
+// MainTabs - bottom tab navigation: Home, Wardrobe, Outfits, Favorites, Profile.
 
 import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
@@ -35,12 +18,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 const ACTIVE = theme.colors.primary; // #5D38F5
 const INACTIVE = theme.colors.textMuted; // #B0ACBF
 
-/**
- * Profile tab icon.
- * - Active: solid filled purple circle with a crisp white human avatar
- *   outline centered inside it.
- * - Inactive: a plain line-art person outline in the muted color.
- */
+// Profile tab icon: active = solid purple disc w/ white avatar; inactive = outline.
 function ProfileTabIcon({
   focused,
   color,

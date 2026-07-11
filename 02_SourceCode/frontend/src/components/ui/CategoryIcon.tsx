@@ -1,9 +1,7 @@
-/**
- * CategoryIcon - renders a wardrobe category icon in its brand color.
- */
+// CategoryIcon - renders a wardrobe category icon in its brand color.
 
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@theme/theme';
 import { getCategory, type CategoryId } from '@constants/index';

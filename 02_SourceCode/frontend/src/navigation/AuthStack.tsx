@@ -1,6 +1,4 @@
-/**
- * AuthStack - Welcome, Login, Signup screens.
- */
+// AuthStack - Welcome, Login, Signup screens.
 
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

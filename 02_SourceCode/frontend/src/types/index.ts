@@ -1,7 +1,4 @@
-/**
- * WearWise TypeScript domain types.
- * These mirror the Supabase database schema (see backend/supabase/migrations).
- */
+// WearWise TypeScript domain types (mirror the Supabase database schema).
 
 import type { CategoryId } from '@constants/index';
 
@@ -58,21 +55,21 @@ export interface WardrobeItemInput {
 export interface SavedOutfit {
   id: string;
   user_id: string;
-  /** Optional custom display name (defaults to the occasion label). */
+  // Optional custom display name (defaults to the occasion label).
   name: string | null;
   occasion: string;
   weather: string | null;
   style_preferences: string[];
   rationale: string | null;
-  /** Ordered item references: top, bottom, dress, shoes, bag, accessories */
+  // Ordered item references: top, bottom, dress, shoes, bag, accessories
   item_ids: string[];
-  /** Heart toggle — synced to the saved_outfits table. */
+  // Heart toggle — synced to the saved_outfits table.
   is_favorite: boolean;
   created_at: string;
 }
 
 export interface SavedOutfitInput {
-  /** Optional custom display name. Falls back to the occasion label. */
+  // Optional custom display name. Falls back to the occasion label.
   name?: string | null;
   occasion: string;
   weather: string | null;
@@ -81,13 +78,13 @@ export interface SavedOutfitInput {
   item_ids: string[];
 }
 
-/** Partial update payload for a saved outfit (edit name / toggle favorite). */
+// Partial update payload for a saved outfit (edit name / toggle favorite).
 export interface SavedOutfitUpdate {
   name?: string | null;
   is_favorite?: boolean;
 }
 
-/** A generated (not yet saved) outfit returned by the recommendation engine. */
+// A generated (not yet saved) outfit returned by the recommendation engine.
 export interface GeneratedOutfit {
   occasion: string;
   weather: string | null;

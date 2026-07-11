@@ -1,19 +1,4 @@
-/**
- * FavoritesScreen - "Favorites" tab.
- *
- * Shows the saved outfits the user has hearted (is_favorite = true). The list
- * is sourced from the shared SavedOutfitsContext (same data the Saved tab and
- * Profile stats use), so favoriting an outfit anywhere instantly reflects
- * here and in the Profile "Favorites" stat.
- *
- * Layout:
- *  - Header: bold navy "Favorites" title.
- *  - Filter pills: built dynamically from the occasions present in the
- *    favorited outfits (All + each occasion).
- *  - Cards: reuses OutfitCard (same component as the Saved tab).
- *  - Empty state: friendly placeholder with a "Browse Saved Outfits" button
- *    that jumps to the Outfits tab.
- */
+// FavoritesScreen - "Favorites" tab showing hearted saved outfits.
 
 import React, { useMemo, useState, useCallback } from 'react';
 import {

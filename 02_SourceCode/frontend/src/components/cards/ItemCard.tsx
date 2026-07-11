@@ -1,9 +1,4 @@
-/**
- * ItemCard - compact wardrobe item card for the 3-column grid.
- * Shows only the product image inside a rounded white card with a subtle
- * shadow and a vertical three-dots menu (top-right) that opens an action
- * sheet with Edit / Delete options.
- */
+// ItemCard - compact wardrobe item card for the 3-column grid.
 
 import React, { useState } from 'react';
 import {

@@ -1,13 +1,4 @@
-/**
- * HomeScreen - dashboard redesigned per guideforyou.js home page spec.
- *
- * Layout: header (menu left + greeting + bell right aligned with text) →
- * search bar (with functional filter) → today's suggestion card (gradient,
- * sparkles, 2x2 item grid, shadow) → quick actions grid (square tiles) →
- * recently added horizontal list (images only, aligned both sides) →
- * dismissible tips banner (lit-bulb icon). Adjusts for empty wardrobes.
- * Responsive across phone widths for both Android and iOS.
- */
+// HomeScreen - dashboard.
 
 import React, { useMemo, useCallback, useState } from 'react';
 import {
@@ -25,20 +16,18 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { Screen, Loading, EmptyState, Button } from '@components/ui';
+import { Screen, Loading, EmptyState, Button, useToast } from '@components/ui';
 import { useAuth } from '@context/AuthContext';
 import { useWardrobe } from '@context/WardrobeContext';
-import { useSavedOutfits } from '@context/SavedOutfitsContext';
-import { useToast } from '@components/ui';
 import { generateOutfit } from '@services/outfitGenerator';
-import { CATEGORIES, getCategory } from '@constants/index';
+import { getCategory } from '@constants/index';
 import { theme } from '@theme/theme';
 import type { RootStackParamList } from '@navigation/types';
 import type { WardrobeItem, GeneratedOutfit } from '@/types';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 
-/** Emoji used as a placeholder for each category in the suggestion preview. */
+// Emoji used as a placeholder for each category in the suggestion preview.
 const CATEGORY_EMOJI: Record<string, string> = {
   tops: '👕',
   bottoms: '👖',
@@ -51,19 +40,11 @@ const CATEGORY_EMOJI: Record<string, string> = {
 export function HomeScreen({ navigation }: Props) {
   const { profile } = useAuth();
   const { items, loading: itemsLoading } = useWardrobe();
-  const { outfits } = useSavedOutfits();
   const { show: showToast } = useToast();
   const { width } = useWindowDimensions();
 
   const [search, setSearch] = useState('');
   const [showTips, setShowTips] = useState(true);
-
-  const greeting = useMemo(() => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 18) return 'Good afternoon';
-    return 'Good evening';
-  }, []);
 
   const firstName = useMemo(() => {
     const name = profile?.full_name?.trim();
@@ -296,11 +277,6 @@ export function HomeScreen({ navigation }: Props) {
                   {isEmpty ? 'Add Item' : 'View Outfit'}
                 </Text>
               </TouchableOpacity>
-              {/* {isEmpty && (
-                <Text style={styles.suggestionEmptyDesc}>
-                  Add items to unlock smart outfit suggestions.
-                </Text>
-              )} */}
             </View>
 
             {/* Right: 2x2 item grid */}
@@ -510,7 +486,7 @@ export function HomeScreen({ navigation }: Props) {
   );
 }
 
-/** Quick action tile: square (height = width), thin border, icon + label. */
+// Quick action tile: square (height = width), thin border, icon + label.
 function QuickAction({
   icon,
   label,
@@ -685,12 +661,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: theme.typography.weights.medium,
   },
-  suggestionEmptyDesc: {
-    fontSize: theme.typography.sizes.sm,
-    color: theme.colors.textSecondary,
-    lineHeight: 20,
-    marginTop: theme.spacing.md,
-  },
   suggestionGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -766,7 +736,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
-    //marginBottom: theme.spacing.sm,
   },
   viewAll: {
     fontSize: theme.typography.sizes.md,

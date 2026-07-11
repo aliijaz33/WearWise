@@ -1,11 +1,4 @@
-/**
- * WelcomeScreen - first screen on load.
- *
- * Full-screen background image with a circular hanger photo, the WearWise
- * wordmark and tagline, and a solid white bottom panel that anchors a vibrant
- * purple "Get Started" button and a "Login" link row.
- * Design per guideforyou.js WelcomeScreenSpec.
- */
+// WelcomeScreen - first screen on load.
 
 import React from 'react';
 import {
@@ -24,16 +17,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '@theme/theme';
 import type { WelcomeScreenProps } from '@navigation/types';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export function WelcomeScreen({ navigation }: WelcomeScreenProps) {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar
-        //barStyle='light-content'
-        backgroundColor='transparent'
-        translucent
-      />
+      <StatusBar backgroundColor='transparent' translucent />
 
       {/* Full-screen background image — shown directly, no gradient overlay. */}
       <ImageBackground

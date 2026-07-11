@@ -1,6 +1,4 @@
-/**
- * Chip - selectable pill for tags (occasions, weather, styles, categories).
- */
+// Chip - selectable pill for tags (occasions, weather, styles, categories).
 
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';

@@ -1,7 +1,4 @@
-/**
- * Admin service - persists Help & Support contact messages to the `admin`
- * table so the WearWise team can review them.
- */
+// Admin service - persists Help & Support contact messages to the admin table.
 
 import { supabase } from './supabase';
 
@@ -11,10 +8,7 @@ export interface AdminMessageInput {
 }
 
 export const adminService = {
-  /**
-   * Inserts a support message (subject + body) into the admin table.
-   * Returns true on success, false on failure.
-   */
+  // Inserts a support message (subject + body) into the admin table. Returns true/false.
   async create(
     userId: string | null,
     email: string | null,

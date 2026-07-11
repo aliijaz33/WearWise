@@ -1,7 +1,4 @@
-/**
- * SignupScreen - register a new account with gradient background.
- * Purple gradient header area with white form card below.
- */
+// SignupScreen - register a new account with gradient background.
 
 import React, { useState } from 'react';
 import {

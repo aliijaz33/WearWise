@@ -1,14 +1,4 @@
-/**
- * ReminderSettingsScreen - notification preferences with Switch toggles.
- *
- * The master toggle maps to profile.notification_enabled. Additional reminder
- * toggles (daily outfit, weekly wardrobe review) are stored locally for now
- * and can be promoted to the profile schema when push notifications are wired.
- *
- * Root uses SafeAreaView (react-native-safe-area-context) with edges={['top']}
- * so the status-bar inset is handled natively and content never clips behind
- * a fixed header.
- */
+// ReminderSettingsScreen - notification preferences with Switch toggles.
 
 import React, { useState, useCallback, useMemo } from 'react';
 import {

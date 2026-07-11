@@ -1,6 +1,4 @@
-/**
- * Input - labeled text field with optional error.
- */
+// Input - labeled text field with optional error.
 
 import React from 'react';
 import {

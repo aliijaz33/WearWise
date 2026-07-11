@@ -1,7 +1,4 @@
-/**
- * WardrobeContext - shared wardrobe item state across Home, Wardrobe, Creator.
- * Loads items once and exposes refresh/add/update/delete helpers.
- */
+// WardrobeContext - shared wardrobe item state across Home, Wardrobe, Creator.
 
 import React, {
   createContext,

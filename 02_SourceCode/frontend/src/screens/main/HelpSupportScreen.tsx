@@ -1,19 +1,4 @@
-/**
- * HelpSupportScreen - contact form + FAQ accordion.
- *
- * The contact form is a local-only mock (no backend endpoint yet). The FAQ is
- * a static list with expandable rows.
- *
- * Structural notes:
- *  - Root uses SafeAreaView (react-native-safe-area-context) with edges={['top']}
- *    so the status-bar inset is handled natively and content never clips behind
- *    a fixed header (the bug that the old Screen+Header combo caused).
- *  - The FAQ accordion uses conditional rendering (mount/unmount) of the answer
- *    block with overflow: 'visible' and no transform/scale animations, so an
- *    expanded answer naturally pushes subsequent rows downward.
- *  - The chevron icon simply swaps between 'chevron-down' and 'chevron-up' — no
- *    rotation transform is applied to any text or View container.
- */
+// HelpSupportScreen - contact form + FAQ accordion.
 
 import React, { useState, useCallback } from 'react';
 import {

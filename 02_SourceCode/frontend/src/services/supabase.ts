@@ -1,11 +1,4 @@
-/**
- * Supabase client initialization.
- * Uses EXPO_PUBLIC_ env vars (inlined by Expo at build time) and SecureStore
- * for persistent auth sessions on both iOS and Android.
- *
- * SecureStore has a ~2048 byte value limit. Supabase session tokens can
- * exceed this, so we split large values across multiple keys (chunking).
- */
+// Supabase client init — uses EXPO_PUBLIC_ env vars + SecureStore with chunking for large sessions.
 
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
@@ -22,20 +15,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-/**
- * Maximum byte size for a single SecureStore value.
- * SecureStore enforces a ~2048 byte limit, so we stay safely under it.
- */
+// Max byte size for a single SecureStore value (stays safely under the ~2048 byte limit).
 const CHUNK_SIZE = 1800;
 
-/** Prefix used to mark a value that has been split into chunks. */
+// Prefix used to mark a value that has been split into chunks.
 const CHUNK_COUNT_SUFFIX = '__chunk_count';
 const CHUNK_INDEX_SUFFIX = '__chunk_';
 
-/**
- * Stores a value in SecureStore, automatically splitting it into chunks
- * when it exceeds the SecureStore byte limit (~2048 bytes).
- */
+// Stores a value in SecureStore, splitting into chunks when it exceeds the byte limit.
 async function secureSetItem(key: string, value: string): Promise<void> {
   // Remove any previously stored chunks for this key.
   await secureRemoveItem(key);
@@ -63,9 +50,7 @@ async function secureSetItem(key: string, value: string): Promise<void> {
   }
 }
 
-/**
- * Retrieves a value from SecureStore, reassembling chunks if necessary.
- */
+// Retrieves a value from SecureStore, reassembling chunks if necessary.
 async function secureGetItem(key: string): Promise<string | null> {
   // Check whether this key was chunked.
   const countStr = await SecureStore.getItemAsync(
@@ -96,9 +81,7 @@ async function secureGetItem(key: string): Promise<string | null> {
   return await SecureStore.getItemAsync(key).catch(() => null);
 }
 
-/**
- * Removes a value (and any associated chunks) from SecureStore.
- */
+// Removes a value (and any associated chunks) from SecureStore.
 async function secureRemoveItem(key: string): Promise<void> {
   const countStr = await SecureStore.getItemAsync(
     `${key}${CHUNK_COUNT_SUFFIX}`,
@@ -121,11 +104,7 @@ async function secureRemoveItem(key: string): Promise<void> {
   await SecureStore.deleteItemAsync(key).catch(() => {});
 }
 
-/**
- * Custom storage adapter backed by expo-secure-store (Keychain on iOS,
- * Keystore on Android) with automatic chunking for large values.
- * Falls back to localStorage on web.
- */
+// Custom storage adapter: expo-secure-store (Keychain/Keystore) with chunking; localStorage on web.
 const ExpoSecureStoreAdapter = {
   getItem: async (key: string): Promise<string | null> => {
     if (Platform.OS === 'web') {

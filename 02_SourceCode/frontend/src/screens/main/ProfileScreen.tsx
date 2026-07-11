@@ -1,20 +1,4 @@
-/**
- * ProfileScreen - "My Profile" with avatar upload, stats, and settings menu.
- *
- * Layout (per client spec):
- *  - Root: SafeAreaView + ScrollView on a soft off-white (#F8F9FA) wash
- *  - Header: centered "My Profile" (deep navy bold) + outlined settings cog (top-right)
- *  - Profile card: white rounded card (16px) with soft shadow; horizontal row
- *    with large circular avatar + vertical stack (name, email, purple Edit button)
- *  - "My Stats": 4 uniform tall rectangular cards (white, thin border, 12px
- *    radius) with colored icon + bold number + grey label, vertically centered
- *  - Settings menu: single white rounded container with 5 rows (Measurements,
- *    Preferences, Reminders, Help, Logout) — [icon][label][chevron] layout
- *    with thin grey dividers; Logout follows the same row pattern
- *
- * Avatar uploads use expo-image-picker + base64→ArrayBuffer→Storage pattern,
- * stored under an `avatars/` prefix in the item-photos bucket.
- */
+// ProfileScreen - "My Profile" with avatar upload, stats, and settings menu.
 
 import React, { useMemo, useState, useCallback } from 'react';
 import {

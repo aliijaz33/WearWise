@@ -1,7 +1,4 @@
-/**
- * AuthContext - manages the Supabase session, profile, and auth actions.
- * Session persists via SecureStore (see services/supabase.ts).
- */
+// AuthContext - manages the Supabase session, profile, and auth actions.
 
 import React, {
   createContext,
@@ -59,26 +56,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const user = session?.user ?? null;
 
-  /**
-   * Loads the profile for a user. The profile is auto-created by a database
-   * trigger on signup, but there can be a brief race condition where the
-   * row isn't visible yet. We retry a few times, and if still missing we
-   * create it manually as a fallback.
-   */
+  // Loads the profile for a user (retries for trigger race; manual fallback if missing).
   const loadProfile = useCallback(async (userId: string) => {
     let p: Profile | null = null;
 
-    // Retry up to 3 times with a short delay – the trigger that creates
-    // the profile row may lag slightly behind the auth event.
+    // Retry up to 3 times — the profile trigger may lag slightly behind the auth event.
     for (let attempt = 0; attempt < 3; attempt++) {
       p = await authService.getProfile(userId);
       if (p) break;
       await new Promise((r) => setTimeout(r, 400));
     }
 
-    // Fallback: if the profile still doesn't exist, create it from the
-    // current session user metadata. This handles edge cases where the
-    // database trigger didn't fire (e.g. OAuth sign-in).
+    // Fallback: create the profile from session metadata if the trigger didn't fire.
     if (!p) {
       const {
         data: { user: authUser },
@@ -195,8 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return true;
       }
 
-      // Fallback: the profile row may not exist yet. Upsert it with the
-      // provided updates so the save never silently fails.
+      // Fallback: upsert the profile row so the save never silently fails.
       const { data: created } = await supabase
         .from('profiles')
         .upsert(

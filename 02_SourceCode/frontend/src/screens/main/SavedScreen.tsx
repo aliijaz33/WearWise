@@ -1,20 +1,4 @@
-/**
- * SavedScreen - "My Saved Outfits" tab.
- *
- * Premium layout (per client spec):
- *  - Header: bold navy "My Saved Outfits" title, back-arrow icon button far
- *    left, search magnifying-glass icon button far right.
- *  - Filter pills: clean rounded outlines (All, Casual, Party, Formal,
- *    Wedding, …). Active = thin vibrant purple border + purple text.
- *    Inactive = light gray border + dark text. No nested count badges.
- *  - Cards: horizontal split — tall Tops image left, outfit name + heart +
- *    three-dots + date + small thumbnail row right (see OutfitCard).
- *  - Interactive actions:
- *      • Heart toggle → optimistic favorite sync to the backend.
- *      • Three-dots → ActionSheet with "Edit Outfit Name" and "Delete Outfit".
- *      • Delete → DELETE request + state refresh on confirmation.
- *      • Edit name → modal with a text input + Save/Cancel.
- */
+// SavedScreen - "My Saved Outfits" tab with filter pills and OutfitCard list.
 
 import React, { useMemo, useState, useCallback } from 'react';
 import {
@@ -34,11 +18,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { EmptyState, Loading, Button } from '@components/ui';
+import { EmptyState, Loading, Button, useToast } from '@components/ui';
 import { OutfitCard } from '@components/cards';
 import { useWardrobe } from '@context/WardrobeContext';
 import { useSavedOutfits } from '@context/SavedOutfitsContext';
-import { useToast } from '@components/ui';
 import { OCCASIONS } from '@constants/index';
 import { theme } from '@theme/theme';
 import type { RootStackParamList } from '@navigation/types';

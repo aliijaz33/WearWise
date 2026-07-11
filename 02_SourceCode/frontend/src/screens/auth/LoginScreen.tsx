@@ -1,8 +1,4 @@
-/**
- * LoginScreen - email/password login with gradient background.
- * Purple gradient header area with white form card below.
- * Includes a "Forgot password?" link that sends a reset email.
- */
+// LoginScreen - email/password login with gradient background.
 
 import React, { useState } from 'react';
 import {

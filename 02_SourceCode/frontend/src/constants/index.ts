@@ -1,8 +1,4 @@
-/**
- * WearWise App Constants
- * Six fixed wardrobe categories, occasions, weather conditions, and style preferences.
- * Per project spec: do NOT change the six wardrobe categories.
- */
+// WearWise App Constants — six fixed wardrobe categories, occasions, weather, styles.
 
 export type CategoryId =
   | 'tops'
@@ -15,17 +11,14 @@ export type CategoryId =
 export interface CategoryDef {
   id: CategoryId;
   label: string;
-  /** Icon name from @expo/vector-icons MaterialCommunityIcons */
+  // Icon name from @expo/vector-icons MaterialCommunityIcons
   icon: string;
   color: string;
-  /** Outfit rule placement */
+  // Outfit rule placement
   rule: string;
 }
 
-/**
- * Exactly six wardrobe categories (per spec section 5).
- * Order is intentional and matches the spec table.
- */
+// Exactly six wardrobe categories (order matches the spec table).
 export const CATEGORIES: CategoryDef[] = [
   {
     id: 'tops',
@@ -83,7 +76,7 @@ export function getCategory(id: string): CategoryDef | undefined {
   return CATEGORY_MAP[id as CategoryId];
 }
 
-/** Occasions used for item tagging and outfit generation. */
+// Occasions used for item tagging and outfit generation.
 export const OCCASIONS: string[] = [
   'Party',
   'Casual',
@@ -102,7 +95,7 @@ export const OCCASIONS: string[] = [
   'Others',
 ];
 
-/** Optional weather conditions for the Outfit Creator. */
+// Optional weather conditions for the Outfit Creator.
 export const WEATHER_CONDITIONS: string[] = [
   'Sunny',
   'Cloudy',
@@ -112,7 +105,7 @@ export const WEATHER_CONDITIONS: string[] = [
   'Windy',
 ];
 
-/** Optional style preferences for the Outfit Creator. */
+// Optional style preferences for the Outfit Creator.
 export const STYLE_PREFERENCES: string[] = [
   'Minimalist',
   'Bold',
@@ -124,7 +117,7 @@ export const STYLE_PREFERENCES: string[] = [
   'Bohemian',
 ];
 
-/** Common clothing colors for tagging. */
+// Common clothing colors for tagging.
 export const COLOR_OPTIONS: { label: string; hex: string }[] = [
   { label: 'Black', hex: '#1A1A1A' },
   { label: 'White', hex: '#FFFFFF' },
@@ -142,7 +135,7 @@ export const COLOR_OPTIONS: { label: string; hex: string }[] = [
   { label: 'Multi', hex: 'linear-gradient' },
 ];
 
-/** Suggested item types per category (free-text allowed but these are presets). */
+// Suggested item types per category (free-text allowed but these are presets).
 export const ITEM_TYPES: Record<CategoryId, string[]> = {
   tops: ['T-Shirt', 'Shirt', 'Blouse', 'Sweater', 'Hoodie', 'Tank Top', 'Polo'],
   bottoms: ['Jeans', 'Trousers', 'Shorts', 'Skirt', 'Leggings', 'Joggers'],
@@ -168,5 +161,5 @@ export const ITEM_TYPES: Record<CategoryId, string[]> = {
   ],
 };
 
-/** Storage bucket name for wardrobe item photos. */
+// Storage bucket name for wardrobe item photos.
 export const STORAGE_BUCKET = 'item-photos';

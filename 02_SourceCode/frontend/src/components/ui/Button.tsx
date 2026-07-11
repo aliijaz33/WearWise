@@ -1,6 +1,4 @@
-/**
- * Button - primary brand button with variants.
- */
+// Button - primary brand button with variants.
 
 import React from 'react';
 import {

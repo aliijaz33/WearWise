@@ -1,18 +1,20 @@
-/**
- * ItemDetailScreen - full read-only view of a single wardrobe item.
- * Shows the item photo, category, type, color, occasions, season, and notes.
- * Provides Edit (reuses AddItem in edit mode) and Delete actions.
- */
+// ItemDetailScreen - full read-only view of a single wardrobe item.
 
 import React, { useCallback, useMemo } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { Screen, Header, Button, EmptyState, Loading } from '@components/ui';
-import { CategoryIcon } from '@components/ui';
+import {
+  Screen,
+  Header,
+  Button,
+  EmptyState,
+  Loading,
+  CategoryIcon,
+  useToast,
+} from '@components/ui';
 import { useWardrobe } from '@context/WardrobeContext';
-import { useToast } from '@components/ui';
 import { getCategory } from '@constants/index';
 import { theme } from '@theme/theme';
 import type { RootStackParamList } from '@navigation/types';
@@ -259,7 +261,7 @@ export function ItemDetailScreen({ navigation, route }: Props) {
   );
 }
 
-/** Maps a season string to an appropriate Ionicons icon name. */
+// Maps a season string to an appropriate Ionicons icon name.
 function seasonIcon(season: string | null): keyof typeof Ionicons.glyphMap {
   switch ((season ?? '').toLowerCase()) {
     case 'summer':

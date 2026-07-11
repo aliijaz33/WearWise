@@ -1,6 +1,4 @@
-/**
- * Wardrobe service - CRUD for wardrobe items + photo upload to Supabase Storage.
- */
+// Wardrobe service - CRUD for wardrobe items + photo upload to Supabase Storage.
 
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
@@ -13,17 +11,7 @@ function userIdPath(userId: string): string {
 }
 
 export const wardrobeService = {
-  /**
-   * Upload a photo to the user's folder in the item-photos bucket.
-   *
-   * We read the local file as base64 via expo-file-system, then decode it
-   * into an ArrayBuffer and upload the raw bytes. This is the approach
-   * recommended by Supabase's React Native guide and works reliably on
-   * both iOS (file://) and Android (content://) URIs. The earlier
-   * fetch(uri).blob() approach fails with "Network request failed" on
-   * many Android devices because the Blob polyfill can't resolve
-   * content:// URIs.
-   */
+  // Upload a photo to the user's folder in the item-photos bucket (base64 → ArrayBuffer).
   async uploadPhoto(
     userId: string,
     uri: string,

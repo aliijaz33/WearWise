@@ -1,7 +1,4 @@
-/**
- * Toast - lightweight in-app notification.
- * Provided via ToastProvider + useToast hook.
- */
+// Toast - lightweight in-app notification (ToastProvider + useToast hook).
 
 import React, {
   createContext,
@@ -10,13 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@theme/theme';
 

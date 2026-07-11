@@ -1,6 +1,4 @@
-/**
- * EmptyState - friendly placeholder for empty lists.
- */
+// EmptyState - friendly placeholder for empty lists.
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';

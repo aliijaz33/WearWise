@@ -1,10 +1,4 @@
-/**
- * RootStack - wraps the MainTabs + modal/pushed screens (AddItem, OutfitResult,
- * ItemDetail) and the Profile sub-screens (MyMeasurements, MyPreferences,
- * ReminderSettings, HelpSupport).
- * WardrobeProvider + SavedOutfitsProvider wrap the authenticated area so all
- * main screens and modal screens share the same wardrobe / saved-outfit state.
- */
+// RootStack - wraps MainTabs + modal/pushed screens with shared providers.
 
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

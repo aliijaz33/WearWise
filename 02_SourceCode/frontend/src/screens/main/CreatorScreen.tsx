@@ -1,15 +1,4 @@
-/**
- * CreatorScreen - Outfit Creator.
- *
- * Layout:
- *  1. Header: centered "Outfit Creator" title, back-arrow (left), no subtitle.
- *  2. Vertically scrollable content.
- *  3. Section 1 "CHOOSE OCCASION": tight 5-column grid of small square cards.
- *     Selected card = solid purple (#5D38F5) bg, white icon + label, white
- *     check-circle badge at top-right.
- *  4. Optional weather + style preference sections (feed the generator).
- *  5. Full-width solid purple "Generate Outfit" button with a sparkle icon.
- */
+// CreatorScreen - Outfit Creator.
 
 import React, { useState, useCallback } from 'react';
 import {
@@ -23,26 +12,21 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { Screen, Header, Button, EmptyState } from '@components/ui';
+import { Screen, Header, Button, EmptyState, useToast } from '@components/ui';
 import { useAuth } from '@context/AuthContext';
 import { useWardrobe } from '@context/WardrobeContext';
-import { useToast } from '@components/ui';
 import { generateOutfit } from '@services/outfitGenerator';
 import { theme } from '@theme/theme';
 import type { RootStackParamList } from '@navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 
-/**
- * The 15 occasion cards shown in the choose-occasion grid.
- * Each maps to a MaterialCommunityIcons glyph. The `value` is what gets
- * passed to the outfit generator (and matched against item.occasions).
- */
+// The 15 occasion cards shown in the choose-occasion grid.
 interface OccasionOption {
   label: string;
   value: string;
   icon: string;
-  /** Branded icon color (used when the card is NOT selected). */
+  // Branded icon color (used when the card is NOT selected).
   color: string;
 }
 

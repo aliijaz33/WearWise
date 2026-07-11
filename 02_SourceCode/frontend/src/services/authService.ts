@@ -1,6 +1,4 @@
-/**
- * Auth service - wraps Supabase auth + profile operations.
- */
+// Auth service - wraps Supabase auth + profile operations.
 
 import { supabase } from './supabase';
 import type { Profile } from '@/types';
@@ -56,10 +54,7 @@ export const authService = {
       };
     }
 
-    // Supabase returns a user object even when the email is already
-    // registered (when email confirmation is enabled). In that case the
-    // `identities` array is empty, meaning no new identity was created.
-    // We treat this as a duplicate-email error.
+    // Empty identities array means the email is already registered (duplicate-email error).
     if (
       Array.isArray(data.user.identities) &&
       data.user.identities.length === 0
@@ -102,9 +97,7 @@ export const authService = {
   },
 
   async getProfile(userId: string): Promise<Profile | null> {
-    // Use maybeSingle() instead of single(): single() throws when no row
-    // exists (e.g. the signup trigger hasn't created the profile yet),
-    // whereas maybeSingle() simply returns null.
+    // maybeSingle() returns null instead of throwing when no profile row exists yet.
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -133,9 +126,7 @@ export const authService = {
       >
     >,
   ): Promise<Profile | null> {
-    // First try a plain UPDATE. If the profile row doesn't exist yet
-    // (trigger didn't fire), this returns 0 rows and we fall back to an
-    // upsert so the save never silently fails.
+    // Try a plain UPDATE first; fall back to upsert if the profile row doesn't exist yet.
     const { data, error } = await supabase
       .from('profiles')
       .update(updates)

@@ -1,15 +1,4 @@
-/**
- * WardrobeScreen - filterable 3-column grid of wardrobe items.
- *
- * Layout:
- *  1. Header: centered "My Wardrobe" title, back-arrow (left), search (right).
- *  2. Horizontal category row of circular icon buttons (active = solid purple).
- *  3. Horizontal filter row of rounded pill outlines (active = purple border/text).
- *     Includes occasion pills plus season pills
- *     (Spring, Summer, Fall, Winter, All Seasons) at the end.
- *  4. 3-column grid of compact image-only cards with a 3-dots edit/delete menu.
- *  5. Full-width "Add New Item" floating action button above the tab bar.
- */
+// WardrobeScreen - filterable 3-column grid of wardrobe items.
 
 import React, { useMemo, useState, useCallback } from 'react';
 import {
@@ -24,10 +13,9 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { Screen, Header, EmptyState, Loading } from '@components/ui';
+import { Screen, Header, EmptyState, Loading, useToast } from '@components/ui';
 import { ItemCard } from '@components/cards';
 import { useWardrobe } from '@context/WardrobeContext';
-import { useToast } from '@components/ui';
 import { CATEGORIES, OCCASIONS, type CategoryId } from '@constants/index';
 import { theme } from '@theme/theme';
 import type { RootStackParamList } from '@navigation/types';
@@ -39,7 +27,7 @@ type Filter = 'all' | CategoryId;
 
 const NUM_COLUMNS = 3;
 
-/** Circular category button icon mapping (MaterialCommunityIcons). */
+// Circular category button icon mapping (MaterialCommunityIcons).
 const CATEGORY_ICON: Record<Filter, string> = {
   all: 'view-grid',
   tops: 'tshirt-crew',
@@ -60,10 +48,7 @@ const CATEGORY_LABEL: Record<Filter, string> = {
   accessories: 'Accessories',
 };
 
-/**
- * Season pills appended to the filter row after the occasion pills.
- * Values match the seasons stored on items (see AddItemScreen SEASONS).
- */
+// Season pills appended to the filter row after the occasion pills.
 const SEASON_FILTERS = ['Spring', 'Summer', 'Fall', 'Winter', 'All Seasons'];
 
 export function WardrobeScreen({ navigation }: Props) {
@@ -175,14 +160,6 @@ export function WardrobeScreen({ navigation }: Props) {
         title='My Wardrobe'
         transparent
         onBack={() => navigation.goBack()}
-        // right={
-        //   <TouchableOpacity
-        //     onPress={() => showToast('Search coming soon', 'info')}
-        //     hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        //   >
-        //     <Ionicons name='search' size={24} color={theme.colors.text} />
-        //   </TouchableOpacity>
-        // }
       />
 
       {/* 2. Horizontal category row of circular icon buttons */}
@@ -307,7 +284,7 @@ export function WardrobeScreen({ navigation }: Props) {
   );
 }
 
-/** Rounded pill outline filter. Active = thin purple border + purple text. */
+// Rounded pill outline filter. Active = thin purple border + purple text.
 function FilterPill({
   label,
   selected,
@@ -366,7 +343,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.primarySoft,
-    //borderWidth: 0.3,
     borderColor: theme.colors.primaryLight,
   },
   categoryCircleActive: {

@@ -1,25 +1,4 @@
-/**
- * OutfitResultScreen - displays a generated outfit with rationale,
- * regenerate, and save-to-wardrobe actions.
- *
- * Layout (per client spec):
- *  1. Header: back chevron (left) + centered bold navy "Your Outfit is Ready! ✨"
- *     + heart-outline favorite button (right).
- *  2. Central canvas: a single light-lavender (#F7F5FF) rounded card containing
- *     a 3-column row:
- *       - Left (50%): tall Tops/Dress image (full height).
- *       - Middle (25%): vertical stack — Bottoms (65%) + Shoes (35%); combined
- *         height equals the Left column height.
- *       - Right (25%): dynamic accessories stack — a single centered Bag when
- *         there are 4 items, or a Bag + Accessory stack when there are 5.
- *  3. "Why this outfit?" — open static text block (no accordion).
- *  4. "Items in this outfit" — list of every item with thumbnail, title,
- *     category label, and a chevron that routes to ItemDetail.
- *  5. Action row: outlined "Regenerate" (left) + solid purple "Save Outfit"
- *     with sparkles (right).
- *
- * Receives a GeneratedOutfit via route params from HomeScreen or CreatorScreen.
- */
+// OutfitResultScreen - displays a generated outfit with rationale, regenerate, and save actions.
 
 import React, { useMemo, useState, useCallback } from 'react';
 import {
@@ -35,10 +14,9 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { Screen, Button } from '@components/ui';
+import { Screen, Button, useToast } from '@components/ui';
 import { useWardrobe } from '@context/WardrobeContext';
 import { useSavedOutfits } from '@context/SavedOutfitsContext';
-import { useToast } from '@components/ui';
 import { regenerateOutfit } from '@services/outfitGenerator';
 import { getCategory } from '@constants/index';
 import { theme } from '@theme/theme';
@@ -642,7 +620,6 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.sizes.md,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.text,
-    //textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: theme.spacing.sm,
   },

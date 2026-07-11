@@ -1,18 +1,4 @@
-/**
- * OutfitCard - premium saved-outfit row card.
- *
- * Layout (per client spec):
- *  - A clean white card with a generous border radius + soft drop shadow.
- *  - Horizontal split:
- *      LEFT  → a tall dedicated slot showing ONLY the primary 'Tops' item as a
- *              large, vertically prominent image.
- *      RIGHT → Top line: Outfit Name (bold navy) left + an absolute-positioned
- *              Heart favorite icon + a vertical three-dots (ellipsis-v) right.
- *              Second line: a formatted date string, small muted gray.
- *              Bottom row: a horizontal row of the remaining small item
- *              thumbnails in strict order: Bottoms, Shoes, Bags, Accessories
- *              (the accessory slot is only rendered when an accessory exists).
- */
+// OutfitCard - premium saved-outfit row card.
 
 import React, { useMemo } from 'react';
 import {
@@ -38,7 +24,7 @@ interface OutfitCardProps {
   style?: ViewStyle;
 }
 
-/** Ordered category slots for the small thumbnail row (after the Tops image). */
+// Ordered category slots for the small thumbnail row (after the Tops image).
 const SMALL_SLOTS: Array<{
   category: WardrobeItem['category'];
   label: string;

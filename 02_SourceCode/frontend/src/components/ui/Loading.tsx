@@ -1,6 +1,4 @@
-/**
- * Loading - centered spinner with optional label.
- */
+// Loading - centered spinner with optional label.
 
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';

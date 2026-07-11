@@ -1,29 +1,9 @@
-/**
- * Outfit Generator - rule-based recommendation engine.
- *
- * Per spec section 5:
- *  - Exactly six categories: tops, bottoms, dresses, shoes, bags, accessories.
- *  - Outfit draws ONLY from items tagged with an occasion compatible with the
- *    selected occasion.
- *  - Required: Shoes (always). Top + Bottoms OR a Dress.
- *  - Bags: included when a compatible tagged item exists.
- *  - Accessories: at least one included when a compatible tagged item exists.
- *  - Regenerate produces an alternate combination.
- *
- * This is a deterministic-but-randomized engine (no AI, per spec section 13).
- */
+// Outfit Generator - rule-based recommendation engine (deterministic-but-randomized, no AI).
 
 import type { WardrobeItem, GeneratedOutfit, OutfitRequest } from '@/types';
 import type { CategoryId } from '@constants/index';
 
-/**
- * Returns the occasions whose tagged items may be used for the selected
- * occasion. Matching is STRICT: only items tagged with the exact selected
- * occasion are eligible. This ensures that if a user has no items tagged
- * for an occasion (e.g. Wedding), no outfit is generated for it — the
- * caller receives null and shows an error instead of silently substituting
- * items tagged for other occasions.
- */
+// Returns occasions eligible for the selected occasion (strict match — no silent substitution).
 function compatibleOccasions(occasion: string): string[] {
   return [occasion];
 }
@@ -42,10 +22,7 @@ function pickRandom<T>(arr: T[]): T | null {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/**
- * Weather-based filtering hints (optional). These nudge selection toward
- * appropriate items but never remove the required categories.
- */
+// Weather-based filtering hints (optional nudges; never remove required categories).
 function weatherSuitability(
   item: WardrobeItem,
   weather: string | null,
@@ -83,9 +60,7 @@ function weatherSuitability(
   return 1;
 }
 
-/**
- * Style preference nudges. Boosts items whose type aligns with a style.
- */
+// Style preference nudges — boosts items whose type aligns with a style.
 function styleSuitability(item: WardrobeItem, styles: string[]): number {
   if (styles.length === 0) return 1;
   const type = item.type.toLowerCase();
@@ -158,7 +133,7 @@ function scoreItem(item: WardrobeItem, req: OutfitRequest): number {
   );
 }
 
-/** Sort items by score desc, then shuffle ties for regenerate variety. */
+// Sort items by score desc, then shuffle ties for regenerate variety.
 function rankByScore(
   items: WardrobeItem[],
   req: OutfitRequest,
@@ -202,10 +177,7 @@ function buildRationale(
   return parts.join(' ');
 }
 
-/**
- * Generate an outfit from the user's wardrobe.
- * Returns null if required categories cannot be satisfied.
- */
+// Generate an outfit from the user's wardrobe. Returns null if required categories can't be met.
 export function generateOutfit(
   items: WardrobeItem[],
   req: OutfitRequest,
@@ -286,11 +258,7 @@ export function generateOutfit(
   return { ...base, rationale, item_ids };
 }
 
-/**
- * Regenerate: produce an alternate combination by re-running the engine.
- * Because selection is randomized among scored items, repeated calls yield
- * different combinations when the pool allows.
- */
+// Regenerate: re-run the engine to produce an alternate combination when the pool allows.
 export function regenerateOutfit(
   items: WardrobeItem[],
   req: OutfitRequest,

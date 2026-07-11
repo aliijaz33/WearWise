@@ -1,12 +1,4 @@
-/**
- * MyMeasurementsScreen - body measurements form (height, chest, waist, hips,
- * shoe size). Persisted to the profile.measurements JSONB column via
- * useAuth.updateProfile.
- *
- * Root uses SafeAreaView (react-native-safe-area-context) with edges={['top']}
- * so the status-bar inset is handled natively and content never clips behind
- * a fixed header.
- */
+// MyMeasurementsScreen - body measurements form persisted to profile.measurements.
 
 import React, { useState, useCallback, useMemo } from 'react';
 import {

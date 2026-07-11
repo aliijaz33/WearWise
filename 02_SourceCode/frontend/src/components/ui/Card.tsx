@@ -1,6 +1,4 @@
-/**
- * Card - rounded surface with soft shadow.
- */
+// Card - rounded surface with soft shadow.
 
 import React from 'react';
 import { View, StyleSheet, ViewStyle, StyleProp } from 'react-native';

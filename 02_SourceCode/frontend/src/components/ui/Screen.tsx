@@ -1,6 +1,4 @@
-/**
- * Screen - base screen wrapper with safe area + scroll + background.
- */
+// Screen - base screen wrapper with safe area + scroll + background.
 
 import React from 'react';
 import {

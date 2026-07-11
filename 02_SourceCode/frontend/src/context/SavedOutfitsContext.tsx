@@ -1,6 +1,4 @@
-/**
- * SavedOutfitsContext - shared saved outfits state across Home, Saved, Creator.
- */
+// SavedOutfitsContext - shared saved outfits state across Home, Saved, Creator.
 
 import React, {
   createContext,
@@ -78,8 +76,7 @@ export function SavedOutfitsProvider({
 
   const toggleFavorite = useCallback(
     async (id: string): Promise<boolean> => {
-      // Optimistic update: flip the heart immediately for a snappy UI, then
-      // sync to the backend. Roll back on failure.
+      // Optimistic update: flip the heart immediately, then sync; roll back on failure.
       const current = outfits.find((o) => o.id === id);
       if (!current) return false;
       const nextVal = !current.is_favorite;

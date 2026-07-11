@@ -1,8 +1,4 @@
-/**
- * AddItemScreen - modal for adding (or editing) a wardrobe item.
- * Photo upload via expo-image-picker, then tag category, type, color,
- * occasions, season, and notes.
- */
+// AddItemScreen - modal for adding (or editing) a wardrobe item.
 
 import React, {
   useState,
@@ -20,7 +16,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';

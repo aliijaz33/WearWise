@@ -1,6 +1,4 @@
-/**
- * Saved Outfits service - persist & retrieve generated outfits.
- */
+// Saved Outfits service - persist & retrieve generated outfits.
 
 import { supabase } from './supabase';
 import type { SavedOutfit, SavedOutfitInput, SavedOutfitUpdate } from '@/types';
@@ -31,10 +29,7 @@ export const savedOutfitsService = {
     return data as SavedOutfit;
   },
 
-  /**
-   * Partially update a saved outfit (e.g. rename it or toggle the favorite
-   * flag). Returns the updated row, or null on failure.
-   */
+  // Partially update a saved outfit (rename / toggle favorite). Returns updated row or null.
   async update(
     id: string,
     patch: SavedOutfitUpdate,

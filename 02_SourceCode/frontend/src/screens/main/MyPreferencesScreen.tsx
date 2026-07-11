@@ -1,14 +1,4 @@
-/**
- * MyPreferencesScreen - user default occasion preference.
- *
- * Separate from the Outfit Creator: this is the user's *standing* default
- * occasion preference persisted to profile.preferences and used as the
- * default when generating outfits.
- *
- * Root uses SafeAreaView (react-native-safe-area-context) with edges={['top']}
- * so the status-bar inset is handled natively and content never clips behind
- * a fixed header.
- */
+// MyPreferencesScreen - user default occasion preference persisted to profile.preferences.
 
 import React, { useState, useCallback, useMemo } from 'react';
 import {

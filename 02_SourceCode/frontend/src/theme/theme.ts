@@ -1,9 +1,4 @@
-/**
- * WearWise Theme
- * Client-extracted palette: vibrant royal purple (#5D38F5) primary, deep
- * purple-navy (#1E1145) headers, soft lavender (#A390F9) accents, light
- * lavender-gray (#F7F5FF) panels. Aligned with the WearWise design system.
- */
+// WearWise Theme — royal purple primary, deep purple-navy text, lavender accents.
 
 export const colors = {
   // Brand – vibrant royal purple (buttons, active icons, highlight text)
