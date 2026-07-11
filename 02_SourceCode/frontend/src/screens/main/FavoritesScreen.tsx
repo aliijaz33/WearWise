@@ -114,7 +114,11 @@ export function FavoritesScreen({ navigation }: Props) {
         item_ids: outfit.item_ids,
       };
 
-      navigation.navigate('OutfitResult', { generated });
+      navigation.navigate('OutfitResult', {
+        generated,
+        savedId: outfit.id,
+        isFavorite: outfit.is_favorite,
+      });
     },
     [itemsById, navigation],
   );
@@ -374,11 +378,11 @@ const styles = StyleSheet.create({
 
   // ---- Header ----
   header: {
+    height: 48,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.sm,
-    paddingBottom: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
   },
   headerIconBtn: {
     width: 40,
@@ -388,7 +392,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     flex: 1,
-    fontSize: theme.typography.sizes.xl,
+    fontSize: theme.typography.sizes.xxl,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.text,
     textAlign: 'center',

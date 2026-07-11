@@ -129,7 +129,11 @@ export function SavedScreen({ navigation }: Props) {
         item_ids: outfit.item_ids,
       };
 
-      navigation.navigate('OutfitResult', { generated });
+      navigation.navigate('OutfitResult', {
+        generated,
+        savedId: outfit.id,
+        isFavorite: outfit.is_favorite,
+      });
     },
     [itemsById, navigation],
   );
@@ -174,8 +178,11 @@ export function SavedScreen({ navigation }: Props) {
     );
   }, [menuOutfit, deleteOutfit, showToast]);
 
-  const goOutfits = useCallback(() => {
-    navigation.getParent()?.navigate('Outfits' as any);
+  // "Create Outfit" CTA on the empty state: jump to the Outfit Creator so the
+  // user can generate a new outfit. (We can't navigate to the "Outfits" tab
+  // because this screen IS the Outfits tab — that would be a no-op.)
+  const goCreateOutfit = useCallback(() => {
+    navigation.navigate('Creator');
   }, [navigation]);
 
   // Back arrow jumps to the Home tab.
@@ -216,7 +223,7 @@ export function SavedScreen({ navigation }: Props) {
             icon='bookmark-outline'
             title='No saved outfits yet'
             message='Generate outfits in the Outfit Creator and save your favourite looks here.'
-            action={<Button title='Create Outfit' onPress={goOutfits} />}
+            action={<Button title='Create Outfit' onPress={goCreateOutfit} />}
           />
         </View>
       </SafeAreaView>

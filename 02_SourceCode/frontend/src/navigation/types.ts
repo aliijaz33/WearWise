@@ -52,7 +52,9 @@ export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
   AddItem: { itemId?: string } | undefined;
-  OutfitResult: { generated: GeneratedOutfit } | undefined;
+  OutfitResult:
+    | { generated: GeneratedOutfit; savedId?: string; isFavorite?: boolean }
+    | undefined;
   ItemDetail: { itemId: string };
   Creator: undefined;
   MyMeasurements: undefined;

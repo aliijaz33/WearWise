@@ -23,7 +23,7 @@ export function Header({
   transparent: _transparent,
 }: HeaderProps) {
   return (
-    <View style={[styles.container, { paddingTop: theme.spacing.sm }]}>
+    <View style={styles.container}>
       <View style={styles.row}>
         {onBack ? (
           <TouchableOpacity
@@ -31,7 +31,7 @@ export function Header({
             style={styles.backBtn}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           >
-            <Ionicons name='chevron-back' size={26} color={theme.colors.text} />
+            <Ionicons name='chevron-back' size={24} color={theme.colors.text} />
           </TouchableOpacity>
         ) : (
           <View style={styles.backBtn} />
@@ -57,12 +57,16 @@ export function Header({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
-    paddingBottom: theme.spacing.md,
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   backBtn: {
     width: 40,
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: theme.typography.sizes.xl,
+    fontSize: theme.typography.sizes.xxl,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.text,
     textAlign: 'center',

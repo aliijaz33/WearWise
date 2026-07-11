@@ -133,7 +133,7 @@ export function MyMeasurementsScreen({ navigation }: Props) {
           onPress={() => navigation.goBack()}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
-          <Ionicons name='chevron-back' size={26} color={theme.colors.text} />
+          <Ionicons name='chevron-back' size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Measurements</Text>
         <View style={styles.backBtn} />
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: theme.spacing.sm,
-    marginBottom: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
   },
   backBtn: {
     width: 40,

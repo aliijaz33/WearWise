@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   branding: {
     alignItems: 'center',
     marginTop: '10%',
-    paddingHorizontal: '20%',
+    paddingHorizontal: '16.5%',
   },
   // Circular frame around the hanger photo.
   hangerWrap: {

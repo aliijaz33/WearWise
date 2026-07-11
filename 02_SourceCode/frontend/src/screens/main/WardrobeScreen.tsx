@@ -175,14 +175,14 @@ export function WardrobeScreen({ navigation }: Props) {
         title='My Wardrobe'
         transparent
         onBack={() => navigation.goBack()}
-        right={
-          <TouchableOpacity
-            onPress={() => showToast('Search coming soon', 'info')}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-          >
-            <Ionicons name='search' size={24} color={theme.colors.text} />
-          </TouchableOpacity>
-        }
+        // right={
+        //   <TouchableOpacity
+        //     onPress={() => showToast('Search coming soon', 'info')}
+        //     hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        //   >
+        //     <Ionicons name='search' size={24} color={theme.colors.text} />
+        //   </TouchableOpacity>
+        // }
       />
 
       {/* 2. Horizontal category row of circular icon buttons */}
@@ -412,12 +412,13 @@ const styles = StyleSheet.create({
   emptyWrap: {
     flex: 1,
     justifyContent: 'center',
+    marginTop: '-25%',
   },
   fabWrap: {
     position: 'absolute',
     left: theme.spacing.lg,
     right: theme.spacing.lg,
-    bottom: theme.spacing.sm,
+    bottom: '13%',
   },
   fab: {
     flexDirection: 'row',

@@ -159,7 +159,7 @@ export function ProfileScreen({ navigation }: Props) {
       if (!user) return null;
       try {
         const ext = (uri.split('.').pop() || 'jpg').toLowerCase();
-        const fileName = `avatars/${user.id}-${Date.now()}.${ext}`;
+        const fileName = `${user.id}/avatars/${Date.now()}.${ext}`;
         const contentType = 'image/jpeg';
 
         const base64 = await FileSystem.readAsStringAsync(uri, {
@@ -298,9 +298,9 @@ export function ProfileScreen({ navigation }: Props) {
   );
 
   const handleSignOut = useCallback(() => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+    Alert.alert('Log Out', 'Are you sure you want to log out?', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => signOut() },
+      { text: 'Log Out', style: 'destructive', onPress: () => signOut() },
     ]);
   }, [signOut]);
 

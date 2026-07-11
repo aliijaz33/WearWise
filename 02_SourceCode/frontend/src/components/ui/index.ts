@@ -8,3 +8,4 @@ export { EmptyState } from './EmptyState';
 export { Loading } from './Loading';
 export { CategoryIcon } from './CategoryIcon';
 export { ToastProvider, useToast } from './Toast';
+export { SplashScreen } from './SplashScreen';

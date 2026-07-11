@@ -122,13 +122,15 @@ export function HomeScreen({ navigation }: Props) {
 
   const handleQuickGenerate = useCallback(() => {
     if (isEmpty || !previewOutfit) {
-      showToast('Add some items to your wardrobe first', 'info');
+      // Wardrobe is empty — the button reads "Add Item", so take the user
+      // straight to the AddItem screen instead of just showing a toast.
+      navigation.navigate('AddItem');
       return;
     }
     // Navigate with the SAME outfit already shown in the suggestion box.
     // Regeneration only happens on the OutfitResultScreen when the user taps "Regenerate".
     navigation.navigate('OutfitResult', { generated: previewOutfit });
-  }, [isEmpty, previewOutfit, navigation, showToast]);
+  }, [isEmpty, previewOutfit, navigation]);
 
   const goToItem = useCallback(
     (item: WardrobeItem) => {
@@ -176,8 +178,8 @@ export function HomeScreen({ navigation }: Props) {
 
   // Responsive sizing based on screen width.
   const isSmall = width < 360;
-  const suggestionImageSize = isSmall ? 75 : 90;
-  const recentItemSize = isSmall ? 81 : 89;
+  const suggestionImageSize = isSmall ? 70 : 90;
+  const recentItemSize = isSmall ? 77 : 89;
 
   return (
     <Screen scroll>
@@ -201,7 +203,7 @@ export function HomeScreen({ navigation }: Props) {
         </View>
 
         <TouchableOpacity
-          onPress={() => showToast('No new notifications', 'info')}
+          onPress={() => showToast('Notifications Coming Soon', 'info')}
           style={styles.bellIcon}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
@@ -265,7 +267,12 @@ export function HomeScreen({ navigation }: Props) {
           end={{ x: 1, y: 1 }}
           style={styles.suggestionCard}
         >
-          <View style={styles.suggestionRow}>
+          <View
+            style={[
+              styles.suggestionRow,
+              { height: 2 * (suggestionImageSize + 4) },
+            ]}
+          >
             {/* Left: text content */}
             <View style={styles.suggestionLeft}>
               <Text style={styles.suggestionLabel}>Today's Suggestion</Text>
@@ -289,6 +296,11 @@ export function HomeScreen({ navigation }: Props) {
                   {isEmpty ? 'Add Item' : 'View Outfit'}
                 </Text>
               </TouchableOpacity>
+              {/* {isEmpty && (
+                <Text style={styles.suggestionEmptyDesc}>
+                  Add items to unlock smart outfit suggestions.
+                </Text>
+              )} */}
             </View>
 
             {/* Right: 2x2 item grid */}
@@ -329,18 +341,30 @@ export function HomeScreen({ navigation }: Props) {
                 })}
               </View>
             ) : (
-              <View style={styles.suggestionGridPlaceholder}>
-                <Text style={styles.suggestionGridEmoji}>👗</Text>
+              <View
+                style={[
+                  styles.suggestionGrid,
+                  styles.suggestionGridPlaceholder,
+                  {
+                    width: 2 * (suggestionImageSize + 4),
+                    height: 2 * (suggestionImageSize + 4),
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.suggestionGridItem,
+                    {
+                      width: suggestionImageSize,
+                      height: suggestionImageSize,
+                    },
+                  ]}
+                >
+                  <Text style={styles.suggestionGridEmoji}>👗</Text>
+                </View>
               </View>
             )}
           </View>
-
-          {isEmpty && (
-            <Text style={styles.suggestionEmptyDesc}>
-              Add items to your wardrobe and we'll generate a stylish outfit for
-              you.
-            </Text>
-          )}
         </LinearGradient>
       </View>
 
@@ -630,7 +654,7 @@ const styles = StyleSheet.create({
   suggestionLeft: {
     flex: 1,
     paddingRight: theme.spacing.md,
-    marginTop: -30,
+    marginTop: '-8%',
   },
   suggestionLabel: {
     fontSize: theme.typography.sizes.md,
@@ -649,7 +673,7 @@ const styles = StyleSheet.create({
   },
   viewOutfitBtn: {
     backgroundColor: theme.colors.primary,
-    marginTop: theme.spacing.lg,
+    marginTop: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.sm,
     borderRadius: theme.radius.button,
@@ -687,11 +711,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   suggestionGridEmoji: {
-    fontSize: 26,
+    fontSize: 50,
   },
   suggestionGridPlaceholder: {
-    width: 120,
-    height: 120,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -54,12 +54,14 @@ export function OutfitResultScreen({ navigation, route }: Props) {
   const { width } = useWindowDimensions();
 
   const initial = route.params?.generated;
+  const initialSavedId = route.params?.savedId ?? null;
+  const initialFavorite = route.params?.isFavorite ?? false;
   const [outfit, setOutfit] = useState<GeneratedOutfit | null>(initial ?? null);
   const [regenerating, setRegenerating] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [savedId, setSavedId] = useState<string | null>(null);
-  const [favorite, setFavorite] = useState(false);
+  const [saved, setSaved] = useState(!!initialSavedId);
+  const [savedId, setSavedId] = useState<string | null>(initialSavedId);
+  const [favorite, setFavorite] = useState(initialFavorite);
   const [togglingFav, setTogglingFav] = useState(false);
 
   const request = useMemo(
@@ -237,7 +239,7 @@ export function OutfitResultScreen({ navigation, route }: Props) {
           style={styles.headerIconBtn}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
-          <Ionicons name='chevron-back' size={26} color={theme.colors.text} />
+          <Ionicons name='chevron-back' size={24} color={theme.colors.text} />
         </TouchableOpacity>
 
         <View style={styles.headerTitleWrap}>
@@ -519,11 +521,11 @@ const styles = StyleSheet.create({
 
   // ---- Header ----
   header: {
+    height: 48,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.sm,
-    paddingBottom: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
   },
   headerIconBtn: {
     width: 40,
@@ -536,7 +538,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: theme.typography.sizes.lg,
+    fontSize: theme.typography.sizes.xxl,
     fontWeight: theme.typography.weights.bold,
     color: theme.colors.text,
     textAlign: 'center',

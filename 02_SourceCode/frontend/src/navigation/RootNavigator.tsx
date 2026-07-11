@@ -1,26 +1,38 @@
 /**
  * RootNavigator - auth gate.
- * Shows Auth stack while initializing or unauthenticated,
- * Main stack once a session exists.
+ *
+ * Shows the custom animated SplashScreen while initializing (and for a minimum
+ * of 2 seconds), then routes to the Auth stack (not logged in) or the Main
+ * stack (already logged in) once the Supabase session has resolved.
  */
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
 
 import { useAuth } from '@context/AuthContext';
 import { AuthStack } from './AuthStack';
 import { RootStack } from './RootStack';
-import { theme } from '@theme/theme';
+import { SplashScreen } from '@components/ui';
 
 export function RootNavigator() {
   const { session, initializing } = useAuth();
+  // The splash stays visible until the session has resolved AND the minimum
+  // 2-second duration has elapsed. `showSplash` flips to false only after both.
+  const [showSplash, setShowSplash] = useState(true);
 
-  if (initializing) {
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
+  if (showSplash) {
+    // `ready` becomes true once Supabase session init finishes. The splash
+    // itself enforces the 2-second minimum, so we pass `!initializing`.
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator size='large' color={theme.colors.primary} />
-      </View>
+      <SplashScreen
+        ready={!initializing}
+        minDuration={2000}
+        onComplete={handleSplashComplete}
+      />
     );
   }
 
@@ -30,12 +42,3 @@ export function RootNavigator() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.background,
-  },
-});
