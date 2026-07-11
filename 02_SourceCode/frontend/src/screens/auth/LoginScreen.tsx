@@ -97,7 +97,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar
         barStyle='light-content'
         backgroundColor='transparent'
@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: theme.radius.xxxl,
     paddingHorizontal: theme.spacing.xl,
     paddingTop: theme.spacing.xxxl,
+    paddingBottom: theme.spacing.xxxl,
     ...Platform.select({
       ios: {
         shadowColor: '#000',

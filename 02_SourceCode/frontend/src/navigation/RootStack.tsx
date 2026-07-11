@@ -30,11 +30,7 @@ export function RootStack() {
       <SavedOutfitsProvider>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='Main' component={MainTabs} />
-          <Stack.Screen
-            name='AddItem'
-            component={AddItemScreen}
-            options={{ presentation: 'modal' }}
-          />
+          <Stack.Screen name='AddItem' component={AddItemScreen} />
           <Stack.Screen name='OutfitResult' component={OutfitResultScreen} />
           <Stack.Screen name='ItemDetail' component={ItemDetailScreen} />
           <Stack.Screen name='Creator' component={CreatorScreen} />
