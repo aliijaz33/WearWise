@@ -629,8 +629,8 @@ const styles = StyleSheet.create({
   },
   suggestionLeft: {
     flex: 1,
-    paddingRight: theme.spacing.md,
-    marginTop: '-8%',
+    paddingRight: theme.spacing.xs,
+    marginTop: '-5%',
   },
   suggestionLabel: {
     fontSize: theme.typography.sizes.md,
