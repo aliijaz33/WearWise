@@ -1,4 +1,4 @@
-// RootNavigator - auth gate: shows splash, then routes to Auth or Main stack.
+// RootNavigator - auth gate: shows splash, then auth stack or main stack.
 
 import React, { useState, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';

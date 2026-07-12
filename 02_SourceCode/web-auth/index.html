@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verified — WearWise</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="card">
+      <!-- Loading -->
+      <div id="state-loading" class="state">
+        <div class="spinner"></div>
+        <h1>Verifying your email…</h1>
+        <p>Please wait a moment.</p>
+      </div>
+
+      <!-- Success -->
+      <div id="state-success" class="state hidden">
+        <div class="icon-circle success">&#10003;</div>
+        <h1>Email Verified!</h1>
+        <p>
+          Your email address has been confirmed. You can now log in to WearWise.
+        </p>
+        <a class="btn" href="wearwise://">Open WearWise</a>
+        <p class="hint">
+          You can also close this page and open the app to log in.
+        </p>
+      </div>
+
+      <!-- Error -->
+      <div id="state-error" class="state hidden">
+        <div class="icon-circle error">!</div>
+        <h1>Verification Failed</h1>
+        <p id="error-message">
+          This link is invalid or has expired. Please request a new verification
+          email from the app.
+        </p>
+      </div>
+
+      <p class="brand">WearWise</p>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // Email verification page.
+      // Supabase's /auth/v1/verify endpoint already confirmed the email server-side,
+      // then redirected here with the session tokens in the URL hash (#access_token=...).
+      // We just read the hash to confirm success — no API call needed.
+
+      function getHashParams() {
+        const params = {};
+        const hash = window.location.hash.substring(1);
+        new URLSearchParams(hash).forEach(function (value, key) {
+          params[key] = value;
+        });
+        return params;
+      }
+
+      function showState(id) {
+        ['state-loading', 'state-success', 'state-error'].forEach(function (s) {
+          document.getElementById(s).classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+      }
+
+      var params = getHashParams();
+
+      if (params.access_token) {
+        // Tokens present → Supabase verified the email and redirected here.
+        showState('state-success');
+        // Clear the hash so tokens don't linger in the browser history.
+        if (history.replaceState) {
+          history.replaceState(null, '', window.location.pathname);
+        }
+      } else if (params.error_description) {
+        document.getElementById('error-message').textContent =
+          params.error_description || 'This link is invalid or has expired.';
+        showState('state-error');
+      } else {
+        // No token and no error — direct visit or expired link.
+        showState('state-error');
+      }
+    </script>
+  </body>
+</html>

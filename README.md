@@ -1,3 +1,9 @@
+# If you need any help/assistance in future you can contact me directly via:
+
+# Email: aliijaz6511@gmail.com
+
+# WhatsApp: +923403975893
+
 # WearWise 👕✨
 
 A cross-platform **smart wardrobe & outfit recommendation** mobile app built with **React Native (Expo)** and **Supabase**. Users photograph their clothing, tag items by category/occasion/color, and the app generates outfit suggestions using a rule-based recommendation engine — no AI required.

@@ -3,6 +3,10 @@
 import { supabase } from './supabase';
 import type { Profile } from '@/types';
 
+// Base URL of the Netlify-hosted auth pages (email verification + password reset).
+// Deploy the web-auth folder to Netlify and update this URL.
+const AUTH_SITE_URL = 'https://wearwise-auth.netlify.app';
+
 export interface AuthResult {
   user: { id: string; email: string } | null;
   error: string | null;
@@ -40,6 +44,7 @@ export const authService = {
       password,
       options: {
         data: { full_name: fullName.trim() },
+        emailRedirectTo: AUTH_SITE_URL,
       },
     });
 
@@ -162,6 +167,7 @@ export const authService = {
   async resetPassword(email: string): Promise<{ error: string | null }> {
     const { error } = await supabase.auth.resetPasswordForEmail(
       email.trim().toLowerCase(),
+      { redirectTo: `${AUTH_SITE_URL}/reset-password` },
     );
     if (error) return { error: mapAuthError(error.message) };
     return { error: null };
