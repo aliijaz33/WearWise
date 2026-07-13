@@ -24,7 +24,23 @@ function mapAuthError(message: string): string {
   ) {
     return 'An account with this email already exists.';
   }
-  if (m.includes('email')) {
+  if (m.includes('rate limit')) {
+    return 'Too many attempts. Please wait a few minutes and try again.';
+  }
+  if (
+    m.includes('error sending') ||
+    m.includes('failed to send') ||
+    m.includes('sending confirmation') ||
+    m.includes('email not sent') ||
+    m.includes('unable to send')
+  ) {
+    return 'Unable to send confirmation email. Please try again in a moment.';
+  }
+  if (
+    m.includes('invalid email') ||
+    m.includes('validate email') ||
+    (m.includes('email address') && m.includes('invalid'))
+  ) {
     return 'Please enter a valid email address.';
   }
   if (m.includes('password') && m.includes('at least')) {

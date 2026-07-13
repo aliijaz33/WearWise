@@ -52,13 +52,11 @@ export function SignupScreen({ navigation }: SignupScreenProps) {
     if (error) {
       toast.show(error, 'error');
     } else {
-      // Clear the form fields so they don't linger after navigation.
       setFullName('');
       setEmail('');
       setPassword('');
       setErrors({});
       toast.show('Account created! Please log in to continue.', 'success');
-      // Navigate to the Login screen so the user can sign in directly.
       navigation.replace('Login');
     }
   };
